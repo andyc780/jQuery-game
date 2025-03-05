@@ -3,33 +3,254 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
-    <title>Blitz Clicker</title>
+    <title>jquery game</title>
     <style>
         *{
             margin: 0;
             padding: 0;
+            font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
         }
-        .intro-menu {
-            display: flex;
-            position: absolute;
+        /* The background will be depicted as the sky, as time progresses, the sky will begin to darken further and further.
+        as the user approaches bounds outside of this world. */
+        body{
+            background-color:#a3c4e3;
+        }
+        .intro-menu{
+            width: 600px;
+            height:350px;
+            background-color: #ddd;
+            position:absolute;
             top: 50%;
             left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: #ccc;
-            width:600px;
-            height: 300px;
-            border-radius: 10px;
-            box-shadow: 2px 2px 2px #555;
+            transform: translate(-50%,-50%);
+            border-radius:10px;
+            box-shadow: 2px 2px 2px #777;
+            opacity: 0;
+            transition: background-color 1s ease, color 1s ease;
         }
+
+        h1, h2{
+            text-align: center;
+            padding:5px;
+        }
+        h1{
+            font-size: 2.5rem;
+            margin-top: 40px;
+        }
+        h2{
+            font-size: 1.25rem;
+            text-decoration: underline;
+        }
+        .difficulty{
+            display: flex;
+            justify-content: space-evenly;
+            margin-top: 20px;
+        }
+        .difficulty-message{
+            font-weight:bold;
+            text-align: center;
+            font-size: 18px;
+            max-width: 300px;
+            margin: auto;
+            margin-top:20px;
+            
+            
+        }
+        
+        .normal-button{
+            height:2rem;
+            font-size:15px;
+            width:120px;
+            background-color:#e3e3a8;
+            border-radius:5px;
+            border:2px solid #555;
+            transition: background-color 0.3s ease, scale 0.3s ease;
+
+        }
+        .normal-button:hover{
+            background-color: #eaea47;
+            scale:1.1;
+        }
+        .expert-button{
+            height:2rem;
+            font-size: 15px;
+            width:120px;
+            background-color: #ed8086;
+            border-radius: 5px;
+            border: 2px solid #555;
+            transition: background-color 0.3s ease, scale 0.3s ease;
+        }
+        .expert-button:hover{
+            background-color: #ec4048;
+            scale:1.1;
+        }
+
+        .input-time{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top:30px;
+            gap:10px;
+        }
+        .input-time > input{
+            height:2rem;
+            width: 200px;
+            font-size:1rem;
+            text-align: center;
+
+        }
+        .submit{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height:65px;
+            width: 200px;
+            margin: auto;
+            font-size: 1rem;
+            border-radius:5px;
+            border: 2px solid #44aa2f;
+            background-color: #9fd494;
+            transition: background-color 0.3s ease, scale 0.3s ease;
+        }
+        .submit:hover{
+            background-color: rgb(71, 231, 71);
+            scale:1.05;
+        }
+        .main-grid-container-normal{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            /* broke method of centering an object to the middle because i hate 100vh and position absolute for this */
+            /* 50% vh subtracted by half of the height of the object which is 760px */
+            margin-top: calc(50vh - 380px);
+        }
+        .main-grid-container-normal button{
+            height: 150px;
+            width: 150px;
+            font-size: 1.5rem;
+            border-radius: 5px;
+            border: 4px solid #555;
+            background-color: #e3e3a8;
+            /* margin: [vertical, horizontal] */
+            margin: 2px 0px;
+            transition: background-color 0.3s ease, scale 0.3s ease;
+        }
+        button:hover{
+            scale:1.01;
+            background-color: #eaea47;
+        }
+    
     </style>
 </head>
 <body>
     <div class="intro-menu">
+        <div class="intro-items">
+            <h1>Blitz Clicker</h1>
+            <h2>Choose Difficulty</h2>
+            <div class="difficulty">
+                <button class="normal-button">Normal</button>
+                <button class="expert-button">Expert</button>
+            </div>
+            <div class="difficulty-message"></div>
+            <br>
+            <button class="submit">Start Game</button>
+        </div>
+    </div>
 
+    <div class="main-grid-container-normal">
+        <div class="row-1">
+            <button>[-]</button>
+            <button>[-]</button>
+            <button>[-]</button>
+            <button>[-]</button>
+            <button>[-]</button>
+        </div>
+        <div class="row-2">
+            <button>[-]</button>
+            <button>[-]</button>
+            <button>[-]</button>
+            <button>[-]</button>
+            <button>[-]</button>
+        </div>
+        <div class="row-3">
+            <button>[-]</button>
+            <button>[-]</button>
+            <button>[-]</button>
+            <button>[-]</button>
+            <button>[-]</button>
+        </div>
+        <div class="row-4">
+            <button>[-]</button>
+            <button>[-]</button>
+            <button>[-]</button>
+            <button>[-]</button>
+            <button>[-]</button>
+        </div>
+        <div class="row-5">
+            <button>[-]</button>
+            <button>[-]</button>
+            <button>[-]</button>
+            <button>[-]</button>
+            <button>[-]</button>
+        </div>
     </div>
 </body>
-<!-- javascript linking -->
 <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
-<script src="script.js"></script>
+<script>
+    $(document).ready(function(){
+        $(".intro-menu").hide();
+        // intitalize variables for the game
+        // Normal difficulty will be default if the user does not interact with any of the buttons
+        let difficulty = "normal";
+        let time;
+        let score = 0;
+        let totalCount = 0;
+        let misses = 0;
+
+
+        $(".normal-button").on("click", function(){
+            difficulty = "normal";
+            $('.intro-menu').css({
+                backgroundColor: '#bede0b',
+                color: '#333',
+            }); 
+            
+            $(".difficulty-message").html('<em>"For those that are willing to embark on an ordinary path.</em>');
+            $(".difficulty-message").fadeOut(0);
+            $(".difficulty-message").fadeIn(750);
+        });
+        $(".expert-button").on("click", function(){
+            difficulty = "expert";
+            $('.intro-menu').css({
+                backgroundColor: '#a10b1a',
+                color: '#f2bbbb',
+                
+            });
+            $(".difficulty-message").html('<em>"Strength is futile in the midst of chaos and destruction."</em');
+            $(".difficulty-message").fadeOut(0);
+            $(".difficulty-message").fadeIn(750);
+        });
+
+        // slide in animation for the menu when the document is ready
+        $(".intro-menu").css({
+            top: '48%',
+            opacity: 0
+        }).animate({
+            top: '50%',
+            opacity: 1
+        },1000);
+
+        $(".submit").on("click", function(){
+            $(".intro-menu").fadeOut(300);
+            // startGame();
+        });
+
+
+
+        // function startGame(difficulty, time){
+
+        // }
+    });
+</script>
 </html>

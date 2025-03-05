@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Firefly Animation</title>
+    <style>
+        /* Setting up the body and background */
+        body {
+            margin: 0;
+            height: 100vh;
+            background-color: #2c3e50; /* Dark background */
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Firefly styles */
+        .firefly {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background-color: rgba(255, 255, 255, 0.8); /* Light color for the fireflies */
+            border-radius: 50%;
+            animation: fly 5s infinite, twinkle 1.5s infinite ease-in-out;
+        }
+
+        /* Animating the fireflies' movement */
+        @keyframes fly {
+            0% {
+                top: 50%;
+                left: 50%;
+            }
+            25% {
+                top: 10%;
+                left: 80%;
+            }
+            50% {
+                top: 90%;
+                left: 20%;
+            }
+            75% {
+                top: 40%;
+                left: 90%;
+            }
+            100% {
+                top: 50%;
+                left: 50%;
+            }
+        }
+
+        /* Twinkle animation to make fireflies fade in and out */
+        @keyframes twinkle {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0;
+            }
+        }
+
+        /* Creating multiple fireflies using JS */
+        .fireflies-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+
+<div class="fireflies-container">
+    <!-- JavaScript will generate fireflies dynamically -->
+</div>
+
+<script>
+    // JavaScript to generate random fireflies
+    const container = document.querySelector('.fireflies-container');
+
+    // Function to generate a random firefly
+    function createFirefly() {
+        const firefly = document.createElement('div');
+        firefly.classList.add('firefly');
+        firefly.style.top = `${Math.random() * 100}vh`; // Random position
+        firefly.style.left = `${Math.random() * 100}vw`; // Random position
+        firefly.style.animationDuration = `${Math.random() * 4 + 3}s`; // Random movement duration
+        firefly.style.animationDelay = `${Math.random() * 5}s`; // Random delay
+        container.appendChild(firefly);
+    }
+
+    // Create 30 random fireflies
+    for (let i = 0; i < 30; i++) {
+        createFirefly();
+    }
+</script>
+
+</body>
+</html>
