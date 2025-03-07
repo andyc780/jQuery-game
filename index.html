@@ -41,6 +41,9 @@
             font-size: 1.25rem;
             text-decoration: underline;
         }
+        h3{
+            margin-bottom:12px;
+        }
         .difficulty{
             display: flex;
             justify-content: space-evenly;
@@ -53,7 +56,6 @@
             max-width: 300px;
             margin: auto;
             margin-top:20px;
-            
             
         }
         
@@ -116,6 +118,12 @@
             background-color: rgb(71, 231, 71);
             scale:1.05;
         }
+
+        .spacing-container{
+            display: flex;
+            justify-content: center;
+            gap:10px;
+        }
         .main-grid-container-normal{
             display: flex;
             flex-direction: column;
@@ -126,8 +134,8 @@
             margin-top: calc(50vh - 380px);
         }
         .main-grid-container-normal button{
-            height: 150px;
-            width: 150px;
+            height: 9.25rem;
+            width: 9.25rem;
             font-size: 1.5rem;
             border-radius: 5px;
             border: 4px solid #555;
@@ -136,9 +144,49 @@
             margin: 2px 0px;
             transition: background-color 0.3s ease, scale 0.3s ease;
         }
+
+        .main-grid-container-expert{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin-top: calc(50vh - 300px);
+        }
+        .main-grid-container-expert button{
+            height:5.75rem;
+            width: 5.75rem;
+            font-size:1rem;
+            border-radius:5px;
+            border: 3px solid #555;
+            background-color: #e3e3a8;
+            margin:2px 0px;
+            transition: baclground-color 0.3s ease, scale 0.3s ease;
+        }
         button:hover{
             scale:1.01;
             background-color: #eaea47;
+        }
+
+
+        .stats{
+            background-color:#ddd;
+            padding:10px;
+            border-radius:0.5rem;
+            box-shadow:2px 2px 2px #888;
+            width:250px;
+        }
+        .statistics-container{
+            margin-top: calc(50vh - 120px)
+        }
+        @media (max-width: 1600px){
+            .main-grid-container-normal button{
+                height: 6.5rem;
+                width: 6.5rem;
+                font-size: 1.25rem;
+            }
+            .main-grid-container-normal{
+                margin-top: calc(50vh - 285px);
+            }
         }
     
     </style>
@@ -157,9 +205,63 @@
             <button class="submit">Start Game</button>
         </div>
     </div>
+    <div class="spacing-container">
+        <div class="main-grid-container-normal">
+            <div class="row-1">
+                <button class ="good">+1 good</button>
+                <button class ="bad">-1 bad</button>
+                <button>[-]</button>
+                <button>[-]</button>
+                <button>[-]</button>
+            </div>
+            <div class="row-2">
+                <button>[-]</button>
+                <button>[-]</button>
+                <button>[-]</button>
+                <button>[-]</button>
+                <button>[-]</button>
+            </div>
+            <div class="row-3">
+                <button>[-]</button>
+                <button>[-]</button>
+                <button>[-]</button>
+                <button>[-]</button>
+                <button>[-]</button>
+            </div>
+            <div class="row-4">
+                <button>[-]</button>
+                <button>[-]</button>
+                <button>[-]</button>
+                <button>[-]</button>
+                <button>[-]</button>
+            </div>
+            <div class="row-5">
+                <button>[-]</button>
+                <button>[-]</button>
+                <button>[-]</button>
+                <button>[-]</button>
+                <button>[-]</button>
+            </div>
+         </div>
 
-    <div class="main-grid-container-normal">
+         <div class="statistics-container">
+            <div class="stats">
+                <h3 class="score">Score: 0</h3>
+                <h3 class="acc">Accuracy: 100.00%</h3>
+                <h3 class="hp">Health: <span style ="color:#ec4048">100 HP</span></h3>
+                <h3 class="time-elapsed">Time Elapsed: 0:0:0.0</h3> <!-- hrs:mins:secs.ms format of time elasped-->
+                <div class="game-buttons">
+                    <button>Pause (P)</button>
+                    <button>End Game (esc)</button>
+                </div>
+           </div>
+        </div>
+    </div>
+
+
+    <div class="main-grid-container-expert">
         <div class="row-1">
+            <button>[-]</button>
             <button>[-]</button>
             <button>[-]</button>
             <button>[-]</button>
@@ -172,8 +274,10 @@
             <button>[-]</button>
             <button>[-]</button>
             <button>[-]</button>
+            <button>[-]</button>
         </div>
         <div class="row-3">
+            <button>[-]</button>
             <button>[-]</button>
             <button>[-]</button>
             <button>[-]</button>
@@ -186,8 +290,18 @@
             <button>[-]</button>
             <button>[-]</button>
             <button>[-]</button>
+            <button>[-]</button>
         </div>
         <div class="row-5">
+            <button>[-]</button>
+            <button>[-]</button>
+            <button>[-]</button>
+            <button>[-]</button>
+            <button>[-]</button>
+            <button>[-]</button>
+        </div>
+        <div class="row-6">
+            <button>[-]</button>
             <button>[-]</button>
             <button>[-]</button>
             <button>[-]</button>
@@ -196,17 +310,22 @@
         </div>
     </div>
 </body>
+
 <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
 <script>
     $(document).ready(function(){
-        $(".intro-menu").hide();
+        // $(".intro-menu").hide();
+        $(".main-grid-container-normal").hide();
+        $(".main-grid-container-expert").hide();
         // intitalize variables for the game
         // Normal difficulty will be default if the user does not interact with any of the buttons
         let difficulty = "normal";
-        let time;
+        let timerElapsed;
         let score = 0;
         let totalCount = 0;
         let misses = 0;
+        let accuracy = 1;
+        let health = 100;
 
 
         $(".normal-button").on("click", function(){
@@ -242,15 +361,72 @@
         },1000);
 
         $(".submit").on("click", function(){
+            console.log("final diff " + difficulty);
             $(".intro-menu").fadeOut(300);
-            // startGame();
+            if(difficulty == "normal"){
+                $(".main-grid-container-normal").fadeIn(1000);
+            }
+            else if(difficulty == "expert")
+            {
+                $(".main-grid-container-expert").fadeIn(1000);
+            }
+            startGame(difficulty);
+        
         });
+        // TESTING PURPOSES DELETE LATER
+            $(".good").on("click", function(){
+                score++;
+                totalCount++;
+                if(health < 100 && (health + 0.5) < 100){
+                    health += 0.5;
+                }
+                else{
+                    health += (100 - health);
+                }
+                accuracy = ((totalCount - misses) / totalCount * 100).toFixed(2);
+                $(".score").html("<h4>Score: " + score + "</h4>");
+                $(".acc").html("<h4>Accuracy: " + accuracy + "%</h4>");
+                $(".hp").html('<h4>Health: <span style="color:#ec4048"> ' + health + ' HP</span></h4>');
+
+            });
+            $(".bad").on("click", function(){
+                score--;
+                totalCount++;
+                misses++;
+                health -= 1;
+                accuracy = ((totalCount - misses) / totalCount * 100).toFixed(2);
+                $(".score").html("<h4>Score: " + score + "</h4>");
+                $(".acc").html("<h4>Accuracy: " + accuracy + "%</h4>");
+                $(".hp").html('<h4>Health: <span style="color:#ec4048"> ' + health + ' HP</span></h4>');
+            });
+    
 
 
 
-        // function startGame(difficulty, time){
-
-        // }
-    });
+        function startGame(difficulty){
+            let miliseconds = 0;
+            let seconds = 0;
+            let minutes = 0;
+            let hours = 0;
+            timerElapsed = setInterval(function(){
+                miliseconds += 1;
+                if(miliseconds == 10){
+                    miliseconds = 0;
+                    seconds += 1;
+                }
+                if(seconds == 60){
+                    seconds = 0;
+                    minutes += 1;
+                }
+                if(minutes == 60){
+                    minutes = 0;
+                    hours += 1;
+                }
+                $(".time-elapsed").html("<h4>Time Elapsed: " + hours + ":" + minutes + ":" + seconds + "." + miliseconds + "</h4>");
+            },100);
+        }
+ 
+    console.log(screen.width, screen.height);
+});
 </script>
 </html>
