@@ -176,7 +176,53 @@
             width:250px;
         }
         .statistics-container{
-            margin-top: calc(50vh - 120px)
+            display: flex;
+            flex-direction: column  ;
+            margin-top: calc(50vh - 200px)
+        }
+        .effects-container{
+            background-color:rgb(214, 204, 101);
+            margin-top:20px;
+            border-radius:10px;
+            box-shadow: 2px 2px 2px #888;    
+            padding:8px;
+            height:auto;
+        }
+        .game-over-menu{
+           position:absolute;
+           top: 50%;
+           left:50%;
+           transform: translate(-50%,-50%);
+           width: 600px;
+           height:350px;
+           background-color: rgb(209, 123, 123);
+           border-radius:10px;
+           box-shadow: 2px 2px 2px #777;
+           /*temporary low z-index to test */
+           z-index: -1;
+        }
+        .pause-menu{
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%,-50%);
+            width: 500px;
+            height:200px;
+            background-color: rgb(147, 79, 170);
+            border-radius:10px;
+            box-shadow: 2px 2px 2px #777;
+
+            z-index:-1;
+
+        }
+        .pause-buttons{
+            display: flex;
+            justify-content: space-evenly;
+            margin-top:30px;
+        }
+        .pause-buttons > button{
+            width: 120px;
+            height: 30px;
         }
         @media (max-width: 1600px){
             .main-grid-container-normal button{
@@ -205,7 +251,29 @@
             <button class="submit">Start Game</button>
         </div>
     </div>
-    <div class="spacing-container">
+
+    <div class="game-over-menu">
+        <div class="game-over-items">
+            <h1 class="over-title">Game Over!</h1>
+            <h2>Your Final Score: -</h2>
+            <h4>Accuracy -%</h4> <h4>Raw Score: -</h4>
+            <h3>Powerups Obtained:</h3>
+            <h3>Time Survived: -:-:-.-</h3>
+            <div class="end-quote"><em>"Random End Quote Here. Resistance is futile, rest easy now."</em></div>
+        </div>
+        <button class="restart">Restart Game</button>
+    </div>
+
+    <div class="pause-menu">
+        <div class="pause-items">
+            <h1>Game Paused!</h1>
+            <div class="pause-buttons">
+                <button class="resume">Resume Game</button>
+                <button class="end-game">End Game</button>
+            </div>
+        </div>
+    </div>
+    <div class="spacing-container container">
         <div class="main-grid-container-normal">
             <div class="row-1">
                 <button class ="good">+1 good</button>
@@ -244,88 +312,126 @@
             </div>
          </div>
 
-         <div class="statistics-container">
+         <div class="statistics-container normal-stat">
             <div class="stats">
                 <h3 class="score">Score: 0</h3>
                 <h3 class="acc">Accuracy: 100.00%</h3>
                 <h3 class="hp">Health: <span style ="color:#ec4048">100 HP</span></h3>
                 <h3 class="time-elapsed">Time Elapsed: 0:0:0.0</h3> <!-- hrs:mins:secs.ms format of time elasped-->
                 <div class="game-buttons">
-                    <button>Pause (P)</button>
-                    <button>End Game (esc)</button>
+                    <button class="pause">Pause (P)</button>
+                    <button class="end-game">End Game (esc)</button>
                 </div>
-           </div>
+            </div>
+            <div class="effects-container">
+                <h3>Effects</h3>
+                <h5>No effects currently.</h5>
+            </div>
+        </div>
+    </div>
+
+    <div class="spacing-container container">
+        
+        <div class="main-grid-container-expert">
+            <div class="row-1">
+                <button class="good">+1 good</button>
+                <button class="bad">-1 bad</button>
+                <button>[-]</button>
+                <button>[-]</button>
+                <button>[-]</button>
+                <button>[-]</button>
+            </div>
+            <div class="row-2">
+                <button>[-]</button>
+                <button>[-]</button>
+                <button>[-]</button>
+                <button>[-]</button>
+                <button>[-]</button>
+                <button>[-]</button>
+            </div>
+            <div class="row-3">
+                <button>[-]</button>
+                <button>[-]</button>
+                <button>[-]</button>
+                <button>[-]</button>
+                <button>[-]</button>
+                <button>[-]</button>
+            </div>
+            <div class="row-4">
+                <button>[-]</button>
+                <button>[-]</button>
+                <button>[-]</button>
+                <button>[-]</button>
+                <button>[-]</button>
+                <button>[-]</button>
+            </div>
+            <div class="row-5">
+                <button>[-]</button>
+                <button>[-]</button>
+                <button>[-]</button>
+                <button>[-]</button>
+                <button>[-]</button>
+                <button>[-]</button>
+            </div>
+            <div class="row-6">
+                <button>[-]</button>
+                <button>[-]</button>
+                <button>[-]</button>
+                <button>[-]</button>
+                <button>[-]</button>
+                <button>[-]</button>
+            </div>
+        </div>
+        <div class="statistics-container expert-stat">
+            <div class="stats">
+                <h3 class="score">Score: 0</h3>
+                <h3 class="acc">Accuracy: 100.00%</h3>
+                <h3 class="hp">Health: <span style ="color:#ec4048">100 HP</span></h3>
+                <h3 class="time-elapsed">Time Elapsed: 0:0:0.0</h3> <!-- hrs:mins:secs.ms format of time elasped-->
+                <div class="game-buttons">
+                    <button class="pause">Pause (P)</button>
+                    <button class="end-game">End Game (esc)</button>
+                </div>
+            </div>
+            <div class="effects-container">
+                <h3>Effects</h3>
+                <h5>No effects currently.</h5>
+            </div>
         </div>
     </div>
 
 
-    <div class="main-grid-container-expert">
-        <div class="row-1">
-            <button>[-]</button>
-            <button>[-]</button>
-            <button>[-]</button>
-            <button>[-]</button>
-            <button>[-]</button>
-            <button>[-]</button>
-        </div>
-        <div class="row-2">
-            <button>[-]</button>
-            <button>[-]</button>
-            <button>[-]</button>
-            <button>[-]</button>
-            <button>[-]</button>
-            <button>[-]</button>
-        </div>
-        <div class="row-3">
-            <button>[-]</button>
-            <button>[-]</button>
-            <button>[-]</button>
-            <button>[-]</button>
-            <button>[-]</button>
-            <button>[-]</button>
-        </div>
-        <div class="row-4">
-            <button>[-]</button>
-            <button>[-]</button>
-            <button>[-]</button>
-            <button>[-]</button>
-            <button>[-]</button>
-            <button>[-]</button>
-        </div>
-        <div class="row-5">
-            <button>[-]</button>
-            <button>[-]</button>
-            <button>[-]</button>
-            <button>[-]</button>
-            <button>[-]</button>
-            <button>[-]</button>
-        </div>
-        <div class="row-6">
-            <button>[-]</button>
-            <button>[-]</button>
-            <button>[-]</button>
-            <button>[-]</button>
-            <button>[-]</button>
-            <button>[-]</button>
-        </div>
-    </div>
+
 </body>
 
 <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
 <script>
+    $(".game-over-menu").hide();
+    $(".statistics-container").hide();
+    $(".main-grid-container-normal").hide();
+    $(".main-grid-container-expert").hide();
+    $(".pause-menu").hide();
     $(document).ready(function(){
         // $(".intro-menu").hide();
-        $(".main-grid-container-normal").hide();
-        $(".main-grid-container-expert").hide();
         // intitalize variables for the game
         // Normal difficulty will be default if the user does not interact with any of the buttons
         let difficulty = "normal";
         let timerElapsed;
         let score = 0;
-        let totalCount = 0;
+        let accuracyBuffer = 1;
+        let totalCount = 0 + accuracyBuffer;
         let misses = 0;
         let accuracy = 1;
         let health = 100;
+        
+        // slide in animation for the menu when the document is ready
+        $(".intro-menu").css({
+            top: '48%',
+            opacity: 0
+        }).animate({
+            top: '50%',
+            opacity: 1
+        },1000);
 
 
         $(".normal-button").on("click", function(){
@@ -351,27 +457,67 @@
             $(".difficulty-message").fadeIn(750);
         });
 
-        // slide in animation for the menu when the document is ready
-        $(".intro-menu").css({
-            top: '48%',
-            opacity: 0
-        }).animate({
-            top: '50%',
-            opacity: 1
-        },1000);
-
         $(".submit").on("click", function(){
             console.log("final diff " + difficulty);
             $(".intro-menu").fadeOut(300);
             if(difficulty == "normal"){
                 $(".main-grid-container-normal").fadeIn(1000);
+                $(".normal-stat").fadeIn(1000);
             }
             else if(difficulty == "expert")
             {
                 $(".main-grid-container-expert").fadeIn(1000);
+                $(".expert-stat").fadeIn(1000);
             }
             startGame(difficulty);
         
+        });
+
+        $('.end-game').on("click", function(){
+            $(".container").fadeOut(500);
+            $(".pause-menu").fadeOut(500);
+            $(".game-over-menu").delay(1000).fadeIn(1000);
+            $(".over-title").html("Game Ended Early");
+        });
+        $(".pause").on("click", function(){
+            clearInterval(timerElapsed);
+            $(".container").animate({
+                opacity: 0.25
+            });
+            $(".pause-menu").fadeIn(300)
+            $(".pause-menu").css({
+                zIndex: 2
+            });
+        });
+        $(".resume").on("click", function(){
+            timerElapsed = setInterval(function(){
+                miliseconds += 1;
+                if(miliseconds == 10){
+                    miliseconds = 0;
+                    seconds += 1;
+                }
+                if(seconds == 60){
+                    seconds = 0;
+                    minutes += 1;
+                }
+                if(minutes == 60){
+                    minutes = 0;
+                    hours += 1;
+                }
+                $(".time-elapsed").html("<h4>Time Elapsed: " + hours + ":" + minutes + ":" + seconds + "." + miliseconds + "</h4>");
+            },100);
+            
+            $(".container").animate({
+                opacity: 1
+            });
+            $(".pause-menu").fadeOut(300);
+            $(".pause-menu").css({
+                zIndex: -1
+            });
+        });
+
+        $(".restart").on("click", function(){
+            location.reload();
         });
         // TESTING PURPOSES DELETE LATER
             $(".good").on("click", function(){
@@ -393,13 +539,16 @@
                 score--;
                 totalCount++;
                 misses++;
-                health -= 1;
+                health -= 25;
                 accuracy = ((totalCount - misses) / totalCount * 100).toFixed(2);
                 $(".score").html("<h4>Score: " + score + "</h4>");
                 $(".acc").html("<h4>Accuracy: " + accuracy + "%</h4>");
                 $(".hp").html('<h4>Health: <span style="color:#ec4048"> ' + health + ' HP</span></h4>');
+                if(health <= 0){
+                    $(".container").fadeOut(500);
+                    $(".game-over-menu").delay(1000).fadeIn(1000);
+                }
             });
-    
 
 
 
@@ -429,4 +578,4 @@
     console.log(screen.width, screen.height);
 });
 </script>
-</html>
+</html>                                 
