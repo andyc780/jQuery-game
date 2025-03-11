@@ -221,7 +221,7 @@
             text-align: center;
             margin:2px;
         }
-        .acc{
+        .acc-game-over{
             display: flex;
             flex-direction: row;
             justify-content: center;
@@ -242,6 +242,7 @@
             border:2px solid #555;
             border-radius:8px;
             font-weight: bold;
+            font-size:1rem;
             transition: background-color 0.3s ease, scale 0.3s ease;
         }
         .restart-button > button:hover{
@@ -360,6 +361,9 @@
                 width: 5.75rem;
                 font-size:1rem;
             }
+            .main-grid-container-expert{
+                margin-top: calc(50vh - 300px);
+            }
         }
     
     </style>
@@ -383,7 +387,7 @@
         <div class="game-over-items">
             <h1 class="over-title">Game Over!</h1>
             <h2>Your Final Score: -</h2>
-            <div class="acc">
+            <div class="acc-game-over">
                 <h4>Accuracy -%</h4> <h4>Raw Score: -</h4>
             </div>
             <h3>Powerups Obtained:</h3>
@@ -552,6 +556,7 @@
         // Normal difficulty will be default if the user does not interact with any of the buttons
         let difficulty = "normal";
         let timerElapsed;
+        let timer; 
         let score = 0;
         let accuracyBuffer = 3; // adds some leniency to the accuracy calculation 
         let totalCount = 0 + accuracyBuffer;
@@ -616,6 +621,7 @@
         });
         $(".pause").on("click", function(){
             clearInterval(timerElapsed);
+            clearInterval(timer);
             $(".container").animate({
                 opacity: 0.25
             });
@@ -637,6 +643,9 @@
         });
         $(".resume").on("click", function(){
             startTimer();
+            setTimeout(function(){
+                startGame(difficulty);
+            },1500)
 
             $(".container").css("pointer-events", "auto"); // make the game board clickable again
             $(".container").animate({
@@ -739,6 +748,24 @@
         // The main game starting function
         function startGame(difficulty){
             // all square button declaration here, will be changed depending on the difficulty.
+            // let buttonEffects = [
+            //     "good1",
+            //     "good2",
+            //     "good3",
+            //     "good4",
+            //     "bad1",
+            //     "bad2",
+            //     "bad3",
+            //     "mystery",
+            //     "speedUp",
+            //     "speedDown",
+            //     "haze",
+            //     "gamblersDice",
+            //     "glassCannon",
+            //     "shrink",
+            //     "expand",
+            //     "mysteriousMushroom"
+            // ]
             let good1;
             let good2;
             let good3;
@@ -761,7 +788,7 @@
             let cycleButtonAmount;
             let cycleTime;
             let buttons; // store button data based on difficulty later
-            let timer; 
+            let delay;
             startTimer();
             inGame = true;
             if(difficulty == "normal"){
@@ -771,9 +798,10 @@
                 buttons = $(".main-grid-container-normal button"); // collect buttons
                 
 
-            } else if(difficulty == "expert"){
+            } 
+            if(difficulty == "expert"){
                 totalButtons = 36;
-                cycleButtonAmount = 12;
+                cycleButtonAmount = 12; // how many buttons can exists in a cycle.
                 cycleTime = 4000;
                 buttons = $(".main-grid-container-expert button"); // collect buttons
             }
@@ -781,7 +809,6 @@
             selectRandomButtons(buttons, cycleButtonAmount);
             timer = setInterval(function(){
                 selectRandomButtons(buttons, cycleButtonAmount);
-
             }, cycleTime);
         }
         function selectRandomButtons(buttons , cycleButtonAmount){
@@ -789,40 +816,41 @@
             let selectSingleButton;
             for(let i = 0; i < cycleButtonAmount; i++){
                 selectSingleButton = Math.floor(Math.random() * buttons.length);
-                if(finalRandomButton.includes(selectSingleButton)){
-                     // checks for potential duplicates in the event the random number generator gets the same number. (will equal true)
-                     // skips the array push entirely and start the loop iteraion over.
-                    i--;
-                }
-                else{
-                    // push data into the array.
-                    finalRandomButton.push(selectSingleButton);
-                }
+                finalRandomButton.push(selectSingleButton);
+            //     if(finalRandomButton.includes(selectSingleButton)){
+            //          // checks for potential duplicates in the event the random number generator gets the same number. (will equal true)
+            //          // skips the array push entirely and start the loop iteraion over.
+            //         i--;
+            //     }
+            //     else{
+            //         // push data into the array.
+            //         finalRandomButton.push(selectSingleButton);
+            //     }
             }
+            console.log(finalRandomButton);
+            console.log(finalRandomButton.length);
             // make the buttons fade in with css for a certain set amount of time, and then fade out.
             // if the buttons are clicked early, then the button will fade out and points will be awarded.
             // if the buttons are not clicked, then the button will fade out, accuracy and health will be deducted.
             // if the user clicks a random blank button, apply the same as above if they were not clicked.
             for(let i = 0; i < finalRandomButton.length; i++){
-
-               
-
-                // $(buttons[finalRandomButton[i]]).css({
-                //     backgroundColor: "#77b4ed"
-                // });
+                // Assign random classes to the buttons for the game.
+                $(buttons[finalRandomButton[i]]).css({
+                    backgroundColor: "#77b4ed"
+                });
     
-                // timer = setTimeout(function(){
-                //     $(buttons[finalRandomButton[i]]).css({
-                //         transition: "background-color 1s ease",
-                //         backgroundColor: "#deddda"
-                //     });
-                // }, 4000); // use a variable for the timer but 4000 can be used for temporary purposes.
-                // $(buttons[finalRandomButton[i]]).on("click", function(){
-                //     $(this).css({
-                //         transition: "background-color 0.25s ease",
-                //         backgroundColor: "#deddda"
-                //     });
-                // });
+                delay = setTimeout(function(){
+                    $(buttons[finalRandomButton[i]]).css({
+                        transition: "background-color 1s ease",
+                        backgroundColor: "#deddda"
+                    });
+                }, 4000); // use a variable for the timer but 4000 can be used for temporary purposes.
+                $(buttons[finalRandomButton[i]]).on("click", function(){
+                    $(this).css({
+                        transition: "background-color 0.25s ease",
+                        backgroundColor: "#deddda"
+                    });
+                });
              }
         }
 });
