@@ -1,0 +1,361 @@
+*{
+    margin: 0;
+    padding: 0;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+/* The background will be depicted as the sky, as time progresses, the sky will begin to darken further and further.
+as the user approaches bounds outside of this world. */
+body{
+    background-color:#a3c4e3;
+}
+.intro-menu{
+    width: 600px;
+    height:350px;
+    background-color: #ddd;
+    position:absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    border-radius:10px;
+    box-shadow: 2px 2px 2px #777;
+    opacity: 0;
+    transition: background-color 1s ease, color 1s ease;
+}
+
+h1, h2{
+    text-align: center;
+    padding:5px;
+}
+h1{
+    font-size: 2.5rem;
+    margin-top: 40px;
+}
+h2{
+    font-size: 1.25rem;
+    text-decoration: underline;
+}
+h3{
+    margin-bottom:12px;
+}
+.difficulty{
+    display: flex;
+    justify-content: space-evenly;
+    margin-top: 20px;
+}
+.difficulty-message{
+    font-weight:bold;
+    text-align: center;
+    font-size: 18px;
+    max-width: 300px;
+    margin: auto;
+    margin-top:20px;
+    
+}
+
+.normal-button{
+    height:2rem;
+    font-size:15px;
+    width:120px;
+    background-color:#e3e3a8;
+    border-radius:5px;
+    border:2px solid #555;
+    transition: background-color 0.3s ease, scale 0.3s ease;
+
+}
+.normal-button:hover{
+    background-color: #eaea47;
+    scale:1.1;
+}
+.expert-button{
+    height:2rem;
+    font-size: 15px;
+    width:120px;
+    background-color: #ed8086;
+    border-radius: 5px;
+    border: 2px solid #555;
+    transition: background-color 0.3s ease, scale 0.3s ease;
+}
+.expert-button:hover{
+    background-color: #ec4048;
+    scale:1.1;
+}
+
+.input-time{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top:30px;
+    gap:10px;
+}
+.input-time > input{
+    height:2rem;
+    width: 200px;
+    font-size:1rem;
+    text-align: center;
+
+}
+.submit{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height:65px;
+    width: 200px;
+    margin: auto;
+    font-size: 1rem;
+    border-radius:5px;
+    border: 2px solid #44aa2f;
+    background-color: #9fd494;
+    transition: background-color 0.3s ease, scale 0.3s ease;
+}
+.submit:hover{
+    background-color: rgb(71, 231, 71);
+    scale:1.05;
+}
+
+.spacing-container{
+    display: flex;
+    justify-content: center;
+    gap:10px;
+}
+.main-grid-container-normal{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    /* broke method of centering an object to the middle because i hate 100vh and position absolute for this */
+    /* 50% vh subtracted by half of the height of the object which is 760px */
+    margin-top: calc(50vh - 380px);
+}
+.main-grid-container-normal button{
+    height: 9.25rem;
+    width: 9.25rem;
+    font-size: 1.5rem;
+    border-radius: 5px;
+    border: 4px solid #555;
+    background-color: #deddda;
+    /* margin: [vertical, horizontal] */
+    margin: 2px 0px;
+    transition: background-color 0.3s ease, scale 0.3s ease;
+}
+
+.main-grid-container-expert{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: calc(50vh - 400px);
+}
+.main-grid-container-expert button{
+    height:8rem;
+    width: 8rem;
+    font-size:1.5rem;
+    border-radius:5px;
+    border: 3px solid #555;
+    background-color: #deddda;
+    margin:2px 0px;
+    transition: background-color 0.3s ease, scale 0.3s ease;
+}
+button:hover{
+    scale:1.025;
+}
+
+.game-buttons{
+    display: flex;
+    justify-content: space-evenly;
+    margin-top: 5px;
+}
+.game-buttons > button{
+    padding:8px;
+    font-size: 1rem;
+    border-radius:5px;
+    border: 2px solid #555;
+    background-color: #deddda;
+    transition: background-color 0.3s ease, scale 0.3s ease;
+}
+.game-buttons > button:hover{
+    background-color: #e3c5a3;
+    scale:1.05;
+}
+.stats{
+    background-color:#ddd;
+    padding:10px;
+    border-radius:0.5rem;
+    box-shadow:2px 2px 2px #888;
+    width:250px;
+}
+.statistics-container{
+    display: flex;
+    flex-direction: column  ;
+    margin-top: calc(50vh - 200px)
+}
+.effects-container{
+    background-color:rgb(214, 204, 101);
+    margin-top:20px;
+    border-radius:10px;
+    box-shadow: 2px 2px 2px #888;    
+    padding:8px;
+    height:auto;
+}
+.game-over-menu{
+   position:absolute;
+   top: 50%;
+   left:50%;
+   transform: translate(-50%,-50%);
+   width: 600px;
+   height:350px;
+   background-color: rgb(209, 123, 123);
+   border-radius:10px;
+   box-shadow: 2px 2px 2px #777;
+}
+.game-over-items{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    margin:2px;
+}
+.acc-game-over{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap:50px;
+    margin-bottom:20px;
+}
+.restart-button{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: auto;
+    margin-top: 20px;
+}
+.restart-button > button{
+    width: 150px;
+    height: 40px;
+    background-color: rgb(255, 185, 185);
+    border:2px solid #555;
+    border-radius:8px;
+    font-weight: bold;
+    font-size:1rem;
+    transition: background-color 0.3s ease, scale 0.3s ease;
+}
+.restart-button > button:hover{
+    background-color: #6cd757;
+    scale:1.1;
+}
+.pause-menu{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    width: 500px;
+    height:200px;
+    background-color: rgb(147, 79, 170);
+    border-radius:10px;
+    box-shadow: 2px 2px 2px #777;
+    z-index:-1;
+
+}
+.pause-buttons{
+    display: flex;
+    justify-content: space-evenly;
+    margin-top:30px;
+}
+.pause-buttons > button{
+    width: 120px;
+    height: 30px;
+}
+.pause-spacer{
+    margin-top: 30px;
+}
+.countdown-area{
+    font-size:2rem;
+    font-weight:bolder;
+    position:absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    z-index: 1;
+    color: #222;
+    background-color: #ccc;
+    height:200px;
+    width: 200px;
+    border-radius:10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 2px solid #333;
+}
+
+/* colors for the different effect of buttons here. */
+/* very colorful indeed */
+#good1{
+    background-color:#77b4ed;
+    
+}
+#good2{
+    background-color: rgb(151, 234, 151);
+}
+#good3{
+    background-color: rgb(9, 165, 9);
+}
+#good4{
+    background-color: rgb(243, 213, 42);
+}
+#bad1{
+    background-color: rgb(233, 99, 99);
+}
+#bad2{
+    background-color: rgb(204, 33, 33);
+}
+#bad3{
+    background-color: rgb(141, 30, 141);
+}
+#mystery{
+    background-color: rgb(141, 137, 137);
+}
+/* .speedUp{
+
+}
+.speedDown{
+
+}
+.haze{
+
+}
+.gamblersDice{
+
+}
+.glassCannon{
+
+}
+.shrink{
+
+}
+.expand{
+
+}
+.mysteriousMushroom{
+
+} */
+
+
+
+@media (max-width: 1600px){
+    .main-grid-container-normal button{
+        height: 6.5rem;
+        width: 6.5rem;
+        font-size: 1.25rem;
+    }
+    .main-grid-container-normal{
+        margin-top: calc(50vh - 285px);
+    }
+
+    .main-grid-container-expert button{
+        height:5.75rem;
+        width: 5.75rem;
+        font-size:1rem;
+    }
+    .main-grid-container-expert{
+        margin-top: calc(50vh - 300px);
+    }
+}

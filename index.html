@@ -4,371 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>jquery game</title>
-    <style>
-        *{
-            margin: 0;
-            padding: 0;
-            font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-        }
-        /* The background will be depicted as the sky, as time progresses, the sky will begin to darken further and further.
-        as the user approaches bounds outside of this world. */
-        body{
-            background-color:#a3c4e3;
-        }
-        .intro-menu{
-            width: 600px;
-            height:350px;
-            background-color: #ddd;
-            position:absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%,-50%);
-            border-radius:10px;
-            box-shadow: 2px 2px 2px #777;
-            opacity: 0;
-            transition: background-color 1s ease, color 1s ease;
-        }
-
-        h1, h2{
-            text-align: center;
-            padding:5px;
-        }
-        h1{
-            font-size: 2.5rem;
-            margin-top: 40px;
-        }
-        h2{
-            font-size: 1.25rem;
-            text-decoration: underline;
-        }
-        h3{
-            margin-bottom:12px;
-        }
-        .difficulty{
-            display: flex;
-            justify-content: space-evenly;
-            margin-top: 20px;
-        }
-        .difficulty-message{
-            font-weight:bold;
-            text-align: center;
-            font-size: 18px;
-            max-width: 300px;
-            margin: auto;
-            margin-top:20px;
-            
-        }
-        
-        .normal-button{
-            height:2rem;
-            font-size:15px;
-            width:120px;
-            background-color:#e3e3a8;
-            border-radius:5px;
-            border:2px solid #555;
-            transition: background-color 0.3s ease, scale 0.3s ease;
-
-        }
-        .normal-button:hover{
-            background-color: #eaea47;
-            scale:1.1;
-        }
-        .expert-button{
-            height:2rem;
-            font-size: 15px;
-            width:120px;
-            background-color: #ed8086;
-            border-radius: 5px;
-            border: 2px solid #555;
-            transition: background-color 0.3s ease, scale 0.3s ease;
-        }
-        .expert-button:hover{
-            background-color: #ec4048;
-            scale:1.1;
-        }
-
-        .input-time{
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-top:30px;
-            gap:10px;
-        }
-        .input-time > input{
-            height:2rem;
-            width: 200px;
-            font-size:1rem;
-            text-align: center;
-
-        }
-        .submit{
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height:65px;
-            width: 200px;
-            margin: auto;
-            font-size: 1rem;
-            border-radius:5px;
-            border: 2px solid #44aa2f;
-            background-color: #9fd494;
-            transition: background-color 0.3s ease, scale 0.3s ease;
-        }
-        .submit:hover{
-            background-color: rgb(71, 231, 71);
-            scale:1.05;
-        }
-
-        .spacing-container{
-            display: flex;
-            justify-content: center;
-            gap:10px;
-        }
-        .main-grid-container-normal{
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            /* broke method of centering an object to the middle because i hate 100vh and position absolute for this */
-            /* 50% vh subtracted by half of the height of the object which is 760px */
-            margin-top: calc(50vh - 380px);
-        }
-        .main-grid-container-normal button{
-            height: 9.25rem;
-            width: 9.25rem;
-            font-size: 1.5rem;
-            border-radius: 5px;
-            border: 4px solid #555;
-            background-color: #deddda;
-            /* margin: [vertical, horizontal] */
-            margin: 2px 0px;
-            transition: background-color 0.3s ease, scale 0.3s ease;
-        }
-
-        .main-grid-container-expert{
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            margin-top: calc(50vh - 400px);
-        }
-        .main-grid-container-expert button{
-            height:8rem;
-            width: 8rem;
-            font-size:1.5rem;
-            border-radius:5px;
-            border: 3px solid #555;
-            background-color: #deddda;
-            margin:2px 0px;
-            transition: background-color 0.3s ease, scale 0.3s ease;
-        }
-        button:hover{
-            scale:1.025;
-        }
-
-        .game-buttons{
-            display: flex;
-            justify-content: space-evenly;
-            margin-top: 5px;
-        }
-        .game-buttons > button{
-            padding:8px;
-            font-size: 1rem;
-            border-radius:5px;
-            border: 2px solid #555;
-            background-color: #deddda;
-            transition: background-color 0.3s ease, scale 0.3s ease;
-        }
-        .game-buttons > button:hover{
-            background-color: #e3c5a3;
-            scale:1.05;
-        }
-        .stats{
-            background-color:#ddd;
-            padding:10px;
-            border-radius:0.5rem;
-            box-shadow:2px 2px 2px #888;
-            width:250px;
-        }
-        .statistics-container{
-            display: flex;
-            flex-direction: column  ;
-            margin-top: calc(50vh - 200px)
-        }
-        .effects-container{
-            background-color:rgb(214, 204, 101);
-            margin-top:20px;
-            border-radius:10px;
-            box-shadow: 2px 2px 2px #888;    
-            padding:8px;
-            height:auto;
-        }
-        .game-over-menu{
-           position:absolute;
-           top: 50%;
-           left:50%;
-           transform: translate(-50%,-50%);
-           width: 600px;
-           height:350px;
-           background-color: rgb(209, 123, 123);
-           border-radius:10px;
-           box-shadow: 2px 2px 2px #777;
-        }
-        .game-over-items{
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            text-align: center;
-            margin:2px;
-        }
-        .acc-game-over{
-            display: flex;
-            flex-direction: row;
-            justify-content: center;
-            gap:50px;
-            margin-bottom:20px;
-        }
-        .restart-button{
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin: auto;
-            margin-top: 20px;
-        }
-        .restart-button > button{
-            width: 150px;
-            height: 40px;
-            background-color: rgb(255, 185, 185);
-            border:2px solid #555;
-            border-radius:8px;
-            font-weight: bold;
-            font-size:1rem;
-            transition: background-color 0.3s ease, scale 0.3s ease;
-        }
-        .restart-button > button:hover{
-            background-color: #6cd757;
-            scale:1.1;
-        }
-        .pause-menu{
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%,-50%);
-            width: 500px;
-            height:200px;
-            background-color: rgb(147, 79, 170);
-            border-radius:10px;
-            box-shadow: 2px 2px 2px #777;
-            z-index:-1;
-
-        }
-        .pause-buttons{
-            display: flex;
-            justify-content: space-evenly;
-            margin-top:30px;
-        }
-        .pause-buttons > button{
-            width: 120px;
-            height: 30px;
-        }
-        .pause-spacer{
-            margin-top: 30px;
-        }
-        .countdown-area{
-            font-size:2rem;
-            font-weight:bolder;
-            position:absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%,-50%);
-            z-index: 1;
-            color: #222;
-            background-color: #ccc;
-            height:200px;
-            width: 200px;
-            border-radius:10px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            border: 2px solid #333;
-        }
-
-        /* colors for the different effect of buttons here. */
-        #good1{
-            background-color:#77b4ed;
-            
-        }
-        #good2{
-            background-color: rgb(151, 234, 151);
-        }
-        #good3{
-            background-color: rgb(9, 165, 9);
-        }
-        #good4{
-            background-color: rgb(243, 213, 42);
-        }
-        #bad1{
-            background-color: rgb(233, 99, 99);
-        }
-        #bad2{
-            background-color: rgb(204, 33, 33);
-        }
-        #bad3{
-            background-color: rgb(141, 30, 141);
-        }
-        #mystery{
-            background-color: rgb(141, 137, 137);
-        }
-        /* .speedUp{
-
-        }
-        .speedDown{
-
-        }
-        .haze{
-
-        }
-        .gamblersDice{
-
-        }
-        .glassCannon{
-
-        }
-        .shrink{
-
-        }
-        .expand{
-
-        }
-        .mysteriousMushroom{
-
-        } */
-
-
-
-        @media (max-width: 1600px){
-            .main-grid-container-normal button{
-                height: 6.5rem;
-                width: 6.5rem;
-                font-size: 1.25rem;
-            }
-            .main-grid-container-normal{
-                margin-top: calc(50vh - 285px);
-            }
-
-            .main-grid-container-expert button{
-                height:5.75rem;
-                width: 5.75rem;
-                font-size:1rem;
-            }
-            .main-grid-container-expert{
-                margin-top: calc(50vh - 300px);
-            }
-        }
-    
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <!-- The welcome menu that lets you choose the difficultyu of the game and start it. -->
     <div class="intro-menu">
         <div class="intro-items">
             <h1>Blitz Clicker</h1>
@@ -383,15 +22,16 @@
         </div>
     </div>
 
+    <!-- The menu when the game is over, displays the final score and other statistics. -->
     <div class="game-over-menu">
         <div class="game-over-items">
             <h1 class="over-title">Game Over!</h1>
-            <h2>Your Final Score: -</h2>
+            <h2 class="final-score">Your Final Score: -</h2>
             <div class="acc-game-over">
-                <h4>Accuracy -%</h4> <h4>Raw Score: -</h4>
+                <h4 class="g-acc">Accuracy -%</h4> <h4 class="raw-acc">Raw Score: -</h4>
             </div>
             <h3>Powerups Obtained:</h3>
-            <h3>Time Survived: -:-:-.-</h3>
+            <h3 class ="time-elapsed">Time Survived: -:-:-.-</h3>
             <div class="end-quote"><em>"Random End Quote Here. Resistance is futile, rest easy now."</em></div>
             <div class="restart-button">
                 <button class="restart">Restart Game</button>
@@ -399,6 +39,7 @@
         </div>
     </div>
 
+    <!-- When you pause the game, this menu will show up. -->
     <div class="pause-menu">
         <div class="pause-items">
             <h1>Game Paused!</h1>
@@ -408,22 +49,26 @@
             </div>
         </div>
     </div>
+    <!-- Hidden area that will display the countdown in the middle of the screen -->
     <div class="countdown-area">
         Get Ready!
     </div>
+    
+    <!-- The entire game board for the normal selected difficulty. -->
+     <!-- Each will have their own grid and statistics chart. -->
     <div class="spacing-container container">
         <div class="main-grid-container-normal">
             <div class="row-1">
-                <button id="good1"> </button>
-                <button id="good2"> </button>
-                <button id="good3"> </button>
-                <button id="good4"> </button>
-                <button id="bad1"> </button>
+                <button> </button>
+                <button> </button>
+                <button> </button>
+                <button> </button>
+                <button> </button>
             </div>
             <div class="row-2">
-                <button id="bad2"> </button>
-                <button id="bad3"> </button>
-                <button id="mystery"> </button>
+                <button> </button>
+                <button> </button>
+                <button> </button>
                 <button> </button>
                 <button> </button>
             </div>
@@ -449,13 +94,12 @@
                 <button> </button>
             </div>
          </div>
-
          <div class="statistics-container normal-stat">
             <div class="stats">
-                <h3 class="score">Score: 0</h3>
-                <h3 class="acc">Accuracy: 100.00%</h3>
+                <h3 class="score">Score:<span style = "color:#2eb8b5"> 0 </span></h3>
+                <h3 class="acc">Accuracy:<span style = "color:#429820">100.00% </span></h3>
                 <h3 class="hp">Health: <span style ="color:#ec4048">100 HP</span></h3>
-                <h3 class="time-elapsed">Time Elapsed: 0:0:0.0</h3> <!-- hrs:mins:secs.ms format of time elasped-->
+                <h3 class="time-elapsed">Time Elapsed:  <span style = "color:#eba442">0:0:0.0 </span></h3> <!-- hrs:mins:secs.ms format of time elasped-->
                 <div class="game-buttons">
                     <button class="pause">Pause (P)</button>
                     <button class="end-game">End Game (esc)</button>
@@ -468,8 +112,9 @@
         </div>
     </div>
 
+    <!-- The entire game board for the expert difficulty.
+    All statistics are the same from normal, just reduced hp. -->
     <div class="spacing-container container">
-        
         <div class="main-grid-container-expert">
             <div class="row-1">
                 <button> </button>
@@ -522,10 +167,10 @@
         </div>
         <div class="statistics-container expert-stat">
             <div class="stats">
-                <h3 class="score">Score: 0</h3>
-                <h3 class="acc">Accuracy: 100.00%</h3>
+                <h3 class="score"> Score:<span style = "color:#2eb8b5"> 0 </span></h3>
+                <h3 class="acc">Accuracy:<span style = "color:#429820">100.00% </span></h3>
                 <h3 class="hp">Health: <span style ="color:#ec4048">100 HP</span></h3>
-                <h3 class="time-elapsed">Time Elapsed: 0:0:0.0</h3> <!-- hrs:mins:secs.ms format of time elasped-->
+                <h3 class="time-elapsed">  Time Elapsed: <span style = "color:#eba442">0:0:0.0</span></h3> <!-- hrs:mins:secs.ms format of time elasped-->
                 <div class="game-buttons">
                     <button class="pause">Pause (P)</button>
                     <button class="end-game">End Game (esc)</button>
@@ -537,13 +182,13 @@
             </div>
         </div>
     </div>
-
-
-
 </body>
 
 <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
 <script>
+    // welcome to all of my pain and suffering inside of this file, good luck going through it.
+
+
     $(".game-over-menu").hide();
     $(".statistics-container").hide();
     $(".main-grid-container-normal").hide();
@@ -556,13 +201,14 @@
         // Normal difficulty will be default if the user does not interact with any of the buttons
         let difficulty = "normal";
         let timerElapsed;
-        let timer; 
+        let timer;
         let score = 0;
-        let accuracyBuffer = 3; // adds some leniency to the accuracy calculation 
+        let accuracyBuffer = 10; // adds some leniency to the accuracy calculation 
         let totalCount = 0 + accuracyBuffer;
         let misses = 0;
         let accuracy = 1;
         let health = 100;
+        let temp;
         let inGame = false;
         
         // slide in animation for the menu when the document is ready
@@ -618,8 +264,43 @@
             $(".pause-menu").fadeOut(500);
             $(".game-over-menu").delay(1000).fadeIn(1000);
             $(".over-title").html("Game Ended Early");
+            inGame = false;
+            clearInterval(timerElapsed);
+            clearInterval(timer);
+            $(".container").fadeOut(500);
+            $(".game-over-menu").delay(1000).fadeIn(1000);
+            $(".over-title").html("Game Over!");
+            $(".final-score").html("Your Final Score: " + (score * (accuracy / 100)).toFixed(1));
+            $(".g-acc").html("Accuracy: " + accuracy + "%");
+            $(".raw-acc").html("Raw Score: " + score);
+            $(".time-elapsed").html("Time Elapsed: " + hours + ":" + minutes + ":" + seconds + "." + miliseconds);
+        });
+        // Pause when the 
+        $(document).on("keydown", function(e) {
+            if (e.key.toLowerCase() === "p" && inGame) {
+                {
+                    temp = health; // store the current health so we can restore it when resuming the game
+                    console.log(temp);
+                    health = 100; // prevent death from the last set of fading blocks that may reduce health
+                    $(".hp").html('<h4>Health: <span style="color:#ec4048"> 100 HP</span></h4>'); // update the health to 1000 so it doesn't show 0 when paused
+                    clearInterval(timerElapsed);
+                    clearInterval(timer);
+                    $(".container").animate({
+                        opacity: 0.25
+                    });
+                    $(".pause-menu").fadeIn(300)
+                    $(".pause-menu").css({
+                        zIndex: 2
+                    });
+                    $(".container").css("pointer-events", "none"); // make the game board unable to be cliked when paused
+                }
+            }
         });
         $(".pause").on("click", function(){
+            temp = health; // store the current health so we can restore it when resuming the game
+            console.log(temp);
+            health = 100; // prevent death from the last set of fading blocks that may reduce health
+            $(".hp").html('<h4>Health: <span style="color:#ec4048"> 100 HP</span></h4>'); // update the health to 1000 so it doesn't show 0 when paused
             clearInterval(timerElapsed);
             clearInterval(timer);
             $(".container").animate({
@@ -631,21 +312,20 @@
             });
             $(".container").css("pointer-events", "none"); // make the game board unable to be cliked when paused
         });
-        $(document).on("keydown", function(e) {
-            if (e.key.toLowerCase() === "p" && inGame) {
-                $(".pause").click();
-            }
-        });
+        
         $(document).on("keydown", function(e) {
             if (e.key === "Escape" && inGame) {
                 $(".end-game").click();
             }
         });
         $(".resume").on("click", function(){
-            startTimer();
+            health = temp;
+            $(".hp").html('<h4>Health: <span style="color:#ec4048"> ' + health + ' HP</span></h4>'); 
+            clearInterval(timerElapsed);
+            clearInterval(timer);
             setTimeout(function(){
                 startGame(difficulty);
-            },1500)
+            },200);
 
             $(".container").css("pointer-events", "auto"); // make the game board clickable again
             $(".container").animate({
@@ -660,6 +340,8 @@
         $(".restart").on("click", function(){
             location.reload();
         });
+
+    
         // TESTING PURPOSES DELETE LATER
             // $(".good").on("click", function(){
             //     score++;
@@ -695,6 +377,7 @@
 
 
 
+    // all the painful logic is located starting down here. 
     // Timer function for the game, also recorded when the game ends.
         function startCountDown(){
             $(".countdown-area").fadeIn(700);
@@ -740,60 +423,43 @@
                 if(minutes == 60){
                     minutes = 0;
                     hours += 1;
-                }
-                $(".time-elapsed").html("<h4>Time Elapsed: " + hours + ":" + minutes + ":" + seconds + "." + miliseconds + "</h4>");
+                }   
+                $(".time-elapsed").html('<h4>Time Elapsed: <span style="color:#eba442">' + hours + ':' + minutes + ':' + seconds + '.' + miliseconds + '</span></h4>');
             },100);
         }
 
         // The main game starting function
+        // all square button declaration here, will be changed depending on the difficulty.
+        let buttonEffects = [
+            "good1",
+            "good2",
+            "good3",
+            "good4",
+            "bad1",
+            "bad2",
+            "bad3",
+            "mystery"
+        ]
+        let totalButtons;
+        let cycleButtonAmount;
+        let cycleTime;
+        let buttons; // store button data based on difficulty later
+        let delay;
         function startGame(difficulty){
-            // all square button declaration here, will be changed depending on the difficulty.
-            // let buttonEffects = [
-            //     "good1",
-            //     "good2",
-            //     "good3",
-            //     "good4",
-            //     "bad1",
-            //     "bad2",
-            //     "bad3",
-            //     "mystery",
-            //     "speedUp",
-            //     "speedDown",
-            //     "haze",
-            //     "gamblersDice",
-            //     "glassCannon",
-            //     "shrink",
-            //     "expand",
-            //     "mysteriousMushroom"
-            // ]
-            let good1;
-            let good2;
-            let good3;
-            let good4;
-            let bad1;
-            let bad2;
-            let bad3;
-            let mystery
-            let speedUp;
-            let speedDown;
-            let haze;
-            let gamblersDice;
-            let glassCannon;
-            let shrink;
-            let expand;
-            let mysteriousMushroom;
-
-
-            let totalButtons;
-            let cycleButtonAmount;
-            let cycleTime;
-            let buttons; // store button data based on difficulty later
-            let delay;
+            // "speedUp",
+            // "speedDown",
+            // "haze",
+            // "gamblersDice",
+            // "glassCannon",
+            // "shrink",
+            // "expand",
+            // "mysteriousMushroom"
+           
             startTimer();
             inGame = true;
             if(difficulty == "normal"){
                 totalButtons = 25;
-                cycleButtonAmount = 7;
+                cycleButtonAmount = 8;
                 cycleTime = 5000;
                 buttons = $(".main-grid-container-normal button"); // collect buttons
                 
@@ -801,56 +467,159 @@
             } 
             if(difficulty == "expert"){
                 totalButtons = 36;
-                cycleButtonAmount = 12; // how many buttons can exists in a cycle.
-                cycleTime = 4000;
+                cycleButtonAmount = 14; // how many buttons can exists in a cycle.
+                cycleTime = 4500;
                 buttons = $(".main-grid-container-expert button"); // collect buttons
             }
-            
+            // select a couple buttons instantly when the game starts.
             selectRandomButtons(buttons, cycleButtonAmount);
             timer = setInterval(function(){
                 selectRandomButtons(buttons, cycleButtonAmount);
             }, cycleTime);
         }
+
+
         function selectRandomButtons(buttons , cycleButtonAmount){
             let finalRandomButton = [];
             let selectSingleButton;
             for(let i = 0; i < cycleButtonAmount; i++){
                 selectSingleButton = Math.floor(Math.random() * buttons.length);
-                finalRandomButton.push(selectSingleButton);
-            //     if(finalRandomButton.includes(selectSingleButton)){
-            //          // checks for potential duplicates in the event the random number generator gets the same number. (will equal true)
-            //          // skips the array push entirely and start the loop iteraion over.
-            //         i--;
-            //     }
-            //     else{
-            //         // push data into the array.
-            //         finalRandomButton.push(selectSingleButton);
-            //     }
+                // finalRandomButton.push(selectSingleButton);
+                if(finalRandomButton.includes(selectSingleButton)){
+                    // checks for potential duplicates in the event the random number generator gets the same number. (will equal true)
+                    // skips the array push entirely and start the loop iteraion over.
+                    i--;
+                } else {
+                    // push data into the array.
+                    finalRandomButton.push(selectSingleButton);
+                }
             }
-            console.log(finalRandomButton);
-            console.log(finalRandomButton.length);
+            
             // make the buttons fade in with css for a certain set amount of time, and then fade out.
             // if the buttons are clicked early, then the button will fade out and points will be awarded.
             // if the buttons are not clicked, then the button will fade out, accuracy and health will be deducted.
             // if the user clicks a random blank button, apply the same as above if they were not clicked.
             for(let i = 0; i < finalRandomButton.length; i++){
                 // Assign random classes to the buttons for the game.
-                $(buttons[finalRandomButton[i]]).css({
-                    backgroundColor: "#77b4ed"
+                let randomSquare = buttonEffects[Math.floor(Math.random() * buttonEffects.length)];
+                let button = $(buttons[finalRandomButton[i]]);
+                button.attr('id', randomSquare);
+                
+                // when a button is clicked
+                button.on("click", function(){
+                    $(this).removeAttr('id').off("click"); // remove the attribute right after the button is clicked. (.off) will make it no longer responsive to prevent spamming
+                    // checks which square was clicked gives the appropriate score and health.
+                    switch(randomSquare) {
+                        case "good1":
+                            score += 1;
+                            if(health < 100 && (health + 0.5) < 100){
+                                health += 0.5;
+                            }
+                            else{
+                                health += (100 - health);
+                            }
+                            break;
+                        case "good2":
+                            score += 2;
+                            if(health < 100 && (health + 0.5) < 100){
+                                health += 0.5;
+                            }
+                            else{
+                                health += (100 - health);
+                            }                            
+                            break;
+                        case "good3":
+                            score += 5;
+                            if(health < 100 && (health + 0.7) < 100){
+                                health += 0.5;
+                            }
+                            else{
+                                health += (100 - health);
+                            }
+                            break;
+                        case "good4":
+                            score += 8;
+                            if(health < 100 && (health + 1) < 100){
+                                health += 1;
+                            }
+                            else{
+                                health += (100 - health);
+                            }
+                            break;
+                        case "bad1":
+                            score -= 3;
+                            misses++;
+                            health -= 2;
+                            break;
+                        case "bad2":
+                            score -= 5;
+                            misses++;
+                            health -= 3;
+                            break;
+                        case "bad3":
+                            score -= 10;
+                            misses++;
+                            health -= 4;
+                            break;
+                        case "mystery":
+                            let randomScore = Math.floor(Math.random() * 31) - 15; // random number between -15 and 15
+                            let randomHealth = Math.floor(Math.random() * 8) - 5; // random number between -5 and 2
+                            score += randomScore;
+                            health += randomHealth;
+                            if(health < 100 && (health + randomHealth) < 100){
+                                health += randomHealth;
+                            }
+                            else{
+                                health += (100 - health);
+                            }
+                            break;
+                            
+                    }
+                    
+                    totalCount++;
+                    accuracy = ((totalCount - misses) / totalCount * 100).toFixed(2);
+                    $(".score").html('<h4>Score: <span style="color:#2eb8b5">' + score + '</span></h4>');
+                    $(".acc").html('<h4>Accuracy: <span style="color:#429820">' + accuracy + '%</span></h4>');
+                    $(".hp").html('<h4>Health: <span style="color:#ec4048"> ' + health + ' HP</span></h4>');
+                    if(health <= 0){
+                        inGame = false;
+                        clearInterval(timerElapsed);
+                        clearInterval(timer);
+                        $(".container").fadeOut(500);
+                        $(".game-over-menu").delay(1000).fadeIn(1000);
+                        $(".over-title").html("Game Over!");
+                        $(".final-score").html("Your Final Score: " + (score * (accuracy / 100)).toFixed(1));
+                        $(".g-acc").html("Accuracy: " + accuracy + "%");
+                        $(".raw-acc").html("Raw Score: " + score);
+                        $(".time-elapsed").html("Time Elapsed: " + hours + ":" + minutes + ":" + seconds + "." + miliseconds);
+                    }
                 });
-    
+                
+                // Fade out the buttons after a certain set amount of time
                 delay = setTimeout(function(){
-                    $(buttons[finalRandomButton[i]]).css({
-                        transition: "background-color 1s ease",
-                        backgroundColor: "#deddda"
-                    });
-                }, 4000); // use a variable for the timer but 4000 can be used for temporary purposes.
-                $(buttons[finalRandomButton[i]]).on("click", function(){
-                    $(this).css({
-                        transition: "background-color 0.25s ease",
-                        backgroundColor: "#deddda"
-                    });
-                });
+                    // If a good button was not clicked before this timeout function occurs, health will be reduced and so as accuracy.
+                    if (button.attr('id') && button.attr('id').includes('good')) {
+                        health -= 1;
+                        totalCount++;
+                        misses++;
+                        accuracy = ((totalCount - misses) / totalCount * 100).toFixed(2);
+                        $(".hp").html('<h4>Health: <span style="color:#ec4048"> ' + health + ' HP</span></h4>');
+                        $(".acc").html('<h4>Accuracy: <span style="color:#429820">' + accuracy + '%</span></h4>');
+                        if (health <= 0) {
+                            inGame = false;
+                            clearInterval(timerElapsed);
+                            clearInterval(timer);
+                            $(".container").fadeOut(500);
+                            $(".game-over-menu").delay(1000).fadeIn(1000);
+                            $(".over-title").html("Game Over!");
+                            $(".final-score").html("Your Final Score: " + (score * (accuracy / 100)).toFixed(1));
+                            $(".g-acc").html("Accuracy: " + accuracy + "%");
+                            $(".raw-acc").html("Raw Score: " + score);
+                            $(".time-elapsed").html("Time Elapsed: " + hours + ":" + minutes + ":" + seconds + "." + miliseconds);
+                        }
+                    }
+                    button.removeAttr('id').off("click"); // prevent clicking using .off
+                }, (cycleTime - 1000));
              }
         }
 });
