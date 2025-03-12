@@ -106,8 +106,7 @@
                 </div>
             </div>
             <div class="effects-container">
-                <h3>Effects (Max 4)</h3>
-                <h5>No effects currently.</h5>
+                <h3>Effects</h3>
             </div>
         </div>
     </div>
@@ -177,8 +176,7 @@
                 </div>
             </div>
             <div class="effects-container">
-                <h3>Effects (Max 4)</h3>
-                <h5>No effects currently.</h5>
+                <h3>Current Effects</h3>
             </div>
         </div>
     </div>
@@ -277,7 +275,6 @@
             if (e.key.toLowerCase() === "p" && inGame) {
                 {
                     temp = health; // store the current health so we can restore it when resuming the game
-                    console.log(temp);
                     health = 100; // prevent death from the last set of fading blocks that may reduce health
                     $(".hp").html('<h4>Health: <span style="color:#ec4048"> 100 HP</span></h4>'); // update the health to 1000 so it doesn't show 0 when paused
                     clearInterval(timerElapsed);
@@ -295,7 +292,6 @@
         });
         $(".pause").on("click", function(){
             temp = health; // store the current health so we can restore it when resuming the game
-            console.log(temp);
             health = 100; // prevent death from the last set of fading blocks that may reduce health
             $(".hp").html('<h4>Health: <span style="color:#ec4048"> 100 HP</span></h4>'); // update the health to 1000 so it doesn't show 0 when paused
             clearInterval(timerElapsed);
@@ -388,18 +384,39 @@
             },100);
         }
 
+        function effectTimer(event, name, duration){
+            secs = duration
+            effTimer = setInterval(function(){
+                secs -= 1;
+                if(secs <= 0){
+                    clearInterval(effTimer);
+                }
+                $(event).html(name + " " + secs + "s");
+            }, 1000);
+        }
+
         // The main game starting function
         // all square button declaration here, will be changed depending on the difficulty.\
         let randomEffects = [
             "speedUp",
             "speedDown",
             "haze",
-            "gamblersDice",
             "glassCannon",
-            "shrink",
-            "expand",
-            "mysteriousMushroom"
-        ]
+            "shrink"
+        ];
+        // checking how many times an effect has triggered
+        let speedUpCount = 0;
+        let speedDownCount = 0;
+        let hazeCount = 0;
+        let glassCannonCount = 0;
+        let shrinkCount = 0;
+
+        let speedUpTimeout;
+        let speedDownTimeout;
+        let hazeTimeout;
+        let glassCannonTimeout;
+        let shrinkTimeout;
+
         let buttonEffects = [
             "good1",
             "good2",
@@ -410,33 +427,39 @@
             "bad3",
             "mystery",
             // "effect" // testing remove later
-        ]
+        ];
         let totalButtons;
         let cycleButtonAmount;
         let cycleTime;
         let buttons; // store button data based on difficulty later
         let delay;
+        let glassCannonMultiplier = 1; // used for the glass cannon effect
+        let baseSpeed;
+        let effTimer;
         function startGame(difficulty){
             startTimer();
             inGame = true;
             if(difficulty == "normal"){
-                health = 100;
-                maxHealth = 100;
+                health = 100 + 2000000;
+                maxHealth = 100 + 2000000;
                 $(".hp").html('<h4>Health: <span style="color:#ec4048"> ' + health + ' HP</span></h4>')
                 totalButtons = 25;
                 cycleButtonAmount = 8;
                 cycleTime = 5000;
+                baseSpeed = cycleTime;
                 buttons = $(".main-grid-container-normal button"); // collect buttons
                 
 
             } 
             if(difficulty == "expert"){
-                health = 25;
-                maxHealth = 25
+                health = 50;
+                maxHealth = 50;
                 $(".hp").html('<h4>Health: <span style="color:#ec4048"> ' + health + ' HP</span></h4>');
                 totalButtons = 36;
-                cycleButtonAmount = 20; // how many buttons can exists in a cycle. 
+                cycleButtonAmount = 18; // how many buttons can exists in a cycle. 
                 cycleTime = 4500;
+                baseSpeed = cycleTime;
+                
                 buttons = $(".main-grid-container-expert button"); // collect buttons
             }
             // select a couple buttons instantly when the game starts.
@@ -446,7 +469,9 @@
             }, cycleTime);
         }
 
-
+        let selectEffect;
+        let hasEffect = false;
+      
         function selectRandomButtons(buttons , cycleButtonAmount){
             let finalRandomButton = [];
             let selectSingleButton;
@@ -454,13 +479,11 @@
              // Roll a random chance for an effect to appear in this specific cycle.
              // If the chance is hit, it will reduce the cycleButtonAmount by 1 and instead replace it with the effect button
              // 10% chance per cycle for an effect to appear
-            // let chance = Math.floor(Math.random() * 10) + 1;
-            // if(chance == 5){
-            //     cycleButtonAmount--; // decrement total buttons by 1 for room.
-            //     let selectEffect = randomEffects[Math.floor(Math.random() * randomEffects.length)];
-            //     finalRandomButton.push(selectEffect);
-
-            // }
+            let chance = Math.floor(Math.random() * 11) + 1;
+            if(true){
+                hasEffect = true;
+                selectEffect = randomEffects[Math.floor(Math.random() * randomEffects.length)];
+            }
             for(let i = 0; i < cycleButtonAmount; i++){
                 selectSingleButton = Math.floor(Math.random() * buttons.length);
                 // finalRandomButton.push(selectSingleButton);
@@ -473,7 +496,6 @@
                     finalRandomButton.push(selectSingleButton);
                 }
             }
-            
             // make the buttons fade in with css for a certain set amount of time, and then fade out.
             // if the buttons are clicked early, then the button will fade out and points will be awarded.
             // if the buttons are not clicked, then the button will fade out, accuracy and health will be deducted.
@@ -482,15 +504,145 @@
                 // Assign random classes to the buttons for the game.
                 let randomSquare = buttonEffects[Math.floor(Math.random() * buttonEffects.length)];
                 let button = $(buttons[finalRandomButton[i]]);
-                button.attr('id', randomSquare);
-                
+                if (hasEffect) {
+                    button.attr('id', 'effect');
+                    hasEffect = false;
+                }
+                else{
+                    button.attr('id', randomSquare);
+                }
                 // when a button is clicked
                 button.on("click", function(){
+                    if (button.attr('id') == 'effect') {
+                        console.log(selectEffect); // remove later
+
+// The effects logic needs to be fixed, mainly in the if statements.
+
+                        for (let i = 0; i < randomEffects.length; i++) {
+                            if (randomEffects[i] === selectEffect) {
+                                switch (selectEffect) {
+                                    case "speedUp":
+                                        speedUpCount++;
+                                        if (speedUpCount > 1) {
+                                            clearTimeout(speedUpTimeout);
+                                            clearInterval(effTimer);
+                                            effectTimer(".speedUp", "Speed Up:", 20);
+                                            speedUpTimeout = setTimeout(function() {
+                                                cycleTime = baseSpeed; // return to normal speed after 20 seconds
+                                                speedUpCount = 0;
+                                                $(".effects-container").find(".speedUp").remove(); // removes after the 20 seconds
+                                            }, 20000);
+                                            break;
+                                        } 
+                                        cycleTime = cycleTime - (cycleTime * 0.5); // 25% faster
+                                        $(".effects-container").append('<h4 class="speedUp">Speed Up: 20s</h4>');
+                                        effectTimer(".speedUp", "Speed Up:", 20);
+                                        speedUpTimeout = setTimeout(function() {
+                                            cycleTime = baseSpeed; // return to normal speed after 20 seconds
+                                            speedUpCount = 0;
+                                            $(".effects-container").find(".speedUp").remove();
+                                        }, 20000);
+                                        break;
+
+                                    case "speedDown":
+                                        speedDownCount++;
+                                        if (speedDownCount > 1) {
+                                            clearTimeout(speedDownTimeout);
+                                            clearInterval(effTimer);
+                                            effectTimer(".speedDown", "Speed Down:", 20);
+                                            speedDownTimeout = setTimeout(function() {
+                                                cycleTime = baseSpeed; // reset to normal speed after 20 seconds
+                                                speedDownCount = 0;
+                                                $(".effects-container").find(".speedDown").remove();
+                                            }, 20000);
+                                            break;
+                                        }
+                                        cycleTime = cycleTime + (cycleTime * 0.5); // 50% slower
+                                        $(".effects-container").append('<h4 class="speedDown">Speed Down: 20s</h4>');
+                                        effectTimer(".speedDown", "Speed Down:", 20);
+                                        speedDownTimeout = setTimeout(function() {
+                                            cycleTime = baseSpeed; // reset to normal speed after 20 seconds
+                                            speedDownCount = 0;
+                                            $(".effects-container").find(".speedDown").remove();
+                                        }, 20000);
+                                        break;
+                                    case "haze":
+                                        hazeCount++;
+                                        if (hazeCount > 1) {
+                                            clearTimeout(hazeTimeout);
+                                            clearInterval(effTimer);
+                                            effectTimer(".haze", "Haze:", 15);
+                                            hazeTimeout = setTimeout(function() {
+                                                $(".container").css("opacity", 1);
+                                                hazeCount = 0;
+                                                $(".effects-container").find(".haze").remove();
+                                            }, 15000);
+                                            break;
+                                        }   
+                                        $(".container").css("opacity", 0.5);
+                                        $(".effects-container").append('<h4 class="haze">Haze: 15s</h4>');
+                                        effectTimer(".haze", "Haze:", 15);
+                                        hazeTimeout = setTimeout(function() {
+                                            $(".container").css("opacity", 1);
+                                            $(".effects-container").find(".haze").remove();
+                                            hazeCount = 0;
+                                        },15000);
+                                        break;
+                                    case "glassCannon":
+                                        glassCannonCount++;
+                                        if (glassCannonCount > 1) {
+                                            clearTimeout(glassCannonTimeout);
+                                            clearInterval(effTimer);
+                                            effectTimer(".glassCannon", "Glass Cannon:", 15);
+                                            glassCannonTimeout = setTimeout(function() {
+                                                glassCannonMultiplier = 1;
+                                                $(".effects-container").find(".glassCannon").remove();
+                                                glassCannonCount = 0;
+                                            }, 15000);
+                                            break;
+                                        }
+                                        glassCannonMultiplier = 2;
+                                        $(".effects-container").append('<h4 class="glassCannon">Glass Cannon: 15s</h4>');
+                                        effectTimer(".glassCannon", "Glass Cannon:", 15);
+                                        setTimeout(function() {
+                                            glassCannonMultiplier = 1;
+                                            $(".effects-container").find(".glassCannon").remove();
+                                            glassCannonCount = 0;
+                                        }, 15000);
+                                        break;
+                                    case "shrink":
+                                        shrinkCount++;
+                                        if (shrinkCount > 1) {
+                                            clearTimeout(shrinkTimeout);
+                                            clearInterval(effTimer);
+                                            effectTimer(".shrink", "Shrink:", 15);
+                                            shrinkTimeout = setTimeout(function() {
+                                                $(".main-grid-container-normal button, .main-grid-container-expert button").css("scale", "1");
+                                                $(".effects-container").find(".shrink").remove();
+                                                shrinkCount = 0;
+                                            }, 15000);
+                                            break;
+                                        }
+                                        $(".main-grid-container-normal button, .main-grid-container-expert button").css("scale", "0.75");
+                                        $(".effects-container").append('<h4 class="shrink">Shrink: 15s</h4>');
+                                        effectTimer(".shrink", "Shrink:", 15);
+                                        shrinkTimeout = setTimeout(function() {
+                                            $(".main-grid-container-normal button, .main-grid-container-expert button").css("scale", "1");
+                                            $(".effects-container").find(".shrink").remove();
+                                            shrinkCount = 0;
+                                        }, 15000);
+                                        break;
+                                }
+                            }
+                        }
+                        button.removeAttr('id').off("click"); // remove the attribute right after the button is clicked. (.off) will make it no longer responsive to prevent spamming
+                        return; // exit the function early
+                    }
                     $(this).removeAttr('id').off("click"); // remove the attribute right after the button is clicked. (.off) will make it no longer responsive to prevent spamming
                     // checks which square was clicked gives the appropriate score and health.
                     switch(randomSquare) {
                         case "good1":
-                            score += 1;
+                            score += 1 * glassCannonMultiplier;
                             if(health < maxHealth && (health + 0.5) < maxHealth){
                                 health += 0.5;
                             }
@@ -499,7 +651,7 @@
                             }
                             break;
                         case "good2":
-                            score += 2;
+                            score += 2 * glassCannonMultiplier;
                             if(health < maxHealth && (health + 0.5) < maxHealth){
                                 health += 0.5;
                             }
@@ -508,16 +660,16 @@
                             }                            
                             break;
                         case "good3":
-                            score += 5;
+                            score += 5 * glassCannonMultiplier;
                             if(health < maxHealth && (health + 0.5) < maxHealth){
                                 health += 0.5;
                             }
                             else{
                                 health += (maxHealth - health);
                             }
-                            break;
+                            break;  
                         case "good4":
-                            score += 8;
+                            score += 8 * glassCannonMultiplier;
                             if(health < maxHealth && (health + 1) < maxHealth){
                                 health += 1;
                             }
@@ -526,19 +678,19 @@
                             }
                             break;
                         case "bad1":
-                            score -= 3;
+                            score -= 3 * glassCannonMultiplier;
                             misses++;
-                            health -= 2;
+                            health -= 5 * glassCannonMultiplier;
                             break;
                         case "bad2":
-                            score -= 5;
+                            score -= 5 * glassCannonMultiplier;
                             misses++;
-                            health -= 3;
+                            health -= 7 * glassCannonMultiplier;
                             break;
                         case "bad3":
-                            score -= 10;
+                            score -= 10 * glassCannonMultiplier;
                             misses++;
-                            health -= 4;
+                            health -= 10 * glassCannonMultiplier;
                             break;
                         case "mystery":
                             let randomScore = Math.floor(Math.random() * 31) - 15; // random number between -15 and 15
@@ -552,9 +704,7 @@
                                 health += (maxHealth - health);
                             }
                             break;
-                            
                     }
-                    
                     totalCount++;
                     accuracy = ((totalCount - misses) / totalCount * 100).toFixed(2);
                     $(".score").html('<h4>Score: <span style="color:#2eb8b5">' + score + '</span></h4>');
@@ -578,7 +728,7 @@
                 delay = setTimeout(function(){
                     // If a good button was not clicked before this timeout function occurs, health will be reduced and so as accuracy.
                     if (button.attr('id') && button.attr('id').includes('good')) {
-                        health -= 1;
+                        health -= 3;
                         totalCount++;
                         misses++;
                         accuracy = ((totalCount - misses) / totalCount * 100).toFixed(2);

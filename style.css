@@ -116,6 +116,7 @@ h3{
     display: flex;
     justify-content: center;
     gap:10px;
+    transition: opacity 0.5s ease, scale 0.5s ease;
 }
 .main-grid-container-normal{
     display: flex;
