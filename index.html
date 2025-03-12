@@ -30,7 +30,7 @@
             <div class="acc-game-over">
                 <h4 class="g-acc">Accuracy -%</h4> <h4 class="raw-acc">Raw Score: -</h4>
             </div>
-            <h3>Powerups Obtained:</h3>
+            <h3 class ="p-ups-obtained">Powerups Obtained:</h3>
             <h3 class ="time-elapsed">Time Survived: -:-:-.-</h3>
             <div class="end-quote"><em>"Random End Quote Here. Resistance is futile, rest easy now."</em></div>
             <div class="restart-button">
@@ -208,6 +208,7 @@
         let health;
         let maxHealth;
         let temp;
+        let totalPowerupsCollected = 0;
         let inGame = false;
         
         // slide in animation for the menu when the document is ready
@@ -265,10 +266,11 @@
             $(".over-title").html("Game Ended Early");
             $(".container").fadeOut(500);
             $(".game-over-menu").delay(1000).fadeIn(1000);
-            $(".final-score").html("Your Final Score: " + (score * (accuracy / 100)).toFixed(1));
-            $(".g-acc").html("Accuracy: " + accuracy + "%");
-            $(".raw-acc").html("Raw Score: " + score);
-            $(".time-elapsed").html("Time Elapsed: " + hours + ":" + minutes + ":" + seconds + "." + miliseconds);
+            $(".final-score").html("Your Final Score: <span style='color:gold; font-size:1.5rem;'>" + (score * (accuracy / 100)).toFixed(1) + "</span>");
+            $(".g-acc").html("Accuracy: <span style='color:#66f224'>" + accuracy + "%</span>");
+            $(".raw-acc").html("Raw Score: <span style='color:#3845d6'>" + score + "</span>");
+            $(".p-ups-obtained").html("Powerups Obtained: <span style='color:#eee'>" + totalPowerupsCollected + "</span>");
+            $(".time-elapsed").html('Time Elapsed: <span style="color:#eee">' + hours + ':' + minutes + ':' + seconds + '.' + miliseconds + '</span>');
         });
         // Pause when the 
         $(document).on("keydown", function(e) {
@@ -384,16 +386,16 @@
             },100);
         }
 
-        function effectTimer(event, name, duration){
-            secs = duration
-            effTimer = setInterval(function(){
-                secs -= 1;
-                if(secs <= 0){
-                    clearInterval(effTimer);
-                }
-                $(event).html(name + " " + secs + "s");
-            }, 1000);
-        }
+        // function effectTimer(event, name, duration){
+        //     effectSeconds += duration
+        //     effTimer = setInterval(function(){
+        //         effectSeconds --;
+        //         if(effectSeconds <= 0){
+        //             clearInterval(effTimer);
+        //         }
+        //         $(event).html(name + " " + effectSeconds + "s");
+        //     }, 1000);
+        // }
 
         // The main game starting function
         // all square button declaration here, will be changed depending on the difficulty.\
@@ -411,11 +413,11 @@
         let glassCannonCount = 0;
         let shrinkCount = 0;
 
-        let speedUpTimeout;
-        let speedDownTimeout;
-        let hazeTimeout;
-        let glassCannonTimeout;
-        let shrinkTimeout;
+        let speedUpTime;
+        let speedDownTime;
+        let hazeTime;
+        let glassCannonTime;
+        let shrinkTime;
 
         let buttonEffects = [
             "good1",
@@ -480,7 +482,7 @@
              // If the chance is hit, it will reduce the cycleButtonAmount by 1 and instead replace it with the effect button
              // 10% chance per cycle for an effect to appear
             let chance = Math.floor(Math.random() * 11) + 1;
-            if(true){
+            if(chance == 5){
                 hasEffect = true;
                 selectEffect = randomEffects[Math.floor(Math.random() * randomEffects.length)];
             }
@@ -514,124 +516,118 @@
                 // when a button is clicked
                 button.on("click", function(){
                     if (button.attr('id') == 'effect') {
-                        console.log(selectEffect); // remove later
-
-// The effects logic needs to be fixed, mainly in the if statements.
-
+                        totalPowerupsCollected++;
                         for (let i = 0; i < randomEffects.length; i++) {
                             if (randomEffects[i] === selectEffect) {
+
                                 switch (selectEffect) {
                                     case "speedUp":
-                                        speedUpCount++;
-                                        if (speedUpCount > 1) {
-                                            clearTimeout(speedUpTimeout);
-                                            clearInterval(effTimer);
-                                            effectTimer(".speedUp", "Speed Up:", 20);
-                                            speedUpTimeout = setTimeout(function() {
-                                                cycleTime = baseSpeed; // return to normal speed after 20 seconds
-                                                speedUpCount = 0;
-                                                $(".effects-container").find(".speedUp").remove(); // removes after the 20 seconds
-                                            }, 20000);
-                                            break;
-                                        } 
+                                        if(speedUpCount){
+                                            clearInterval(speedUpTime);
+                                            $(".effects-container").find(".speedUp").remove();
+                                            cycleTime = baseSpeed;
+                                        }
+                                        speedUpCount = true;
                                         cycleTime = cycleTime - (cycleTime * 0.5); // 25% faster
                                         $(".effects-container").append('<h4 class="speedUp">Speed Up: 20s</h4>');
-                                        effectTimer(".speedUp", "Speed Up:", 20);
-                                        speedUpTimeout = setTimeout(function() {
-                                            cycleTime = baseSpeed; // return to normal speed after 20 seconds
-                                            speedUpCount = 0;
-                                            $(".effects-container").find(".speedUp").remove();
-                                        }, 20000);
-                                        break;
+                                        let speedUpSeconds = 20;
+                                        speedUpTime = setInterval(function() {
+                                            speedUpSeconds--;
+                                            if (speedUpSeconds <= 0) {
+                                                clearInterval(speedUpTime);
+                                                cycleTime = baseSpeed; // return to normal speed after 20 seconds
+                                                $(".effects-container").find(".speedUp").remove();
+                                                speedUpCount = false;
+                                            }
+                                            $(".speedUp").html("Speed Up: " + speedUpSeconds + "s");
 
+                                        }, 1000);
+                                        break;
                                     case "speedDown":
-                                        speedDownCount++;
-                                        if (speedDownCount > 1) {
-                                            clearTimeout(speedDownTimeout);
-                                            clearInterval(effTimer);
-                                            effectTimer(".speedDown", "Speed Down:", 20);
-                                            speedDownTimeout = setTimeout(function() {
-                                                cycleTime = baseSpeed; // reset to normal speed after 20 seconds
-                                                speedDownCount = 0;
-                                                $(".effects-container").find(".speedDown").remove();
-                                            }, 20000);
-                                            break;
+                                        if(speedDownCount){
+                                            clearInterval(speedDownTime);
+                                            $(".effects-container").find(".speedDown").remove();
+                                            cycleTime = baseSpeed;
                                         }
+                                        speedDownCount= true;
                                         cycleTime = cycleTime + (cycleTime * 0.5); // 50% slower
                                         $(".effects-container").append('<h4 class="speedDown">Speed Down: 20s</h4>');
-                                        effectTimer(".speedDown", "Speed Down:", 20);
-                                        speedDownTimeout = setTimeout(function() {
-                                            cycleTime = baseSpeed; // reset to normal speed after 20 seconds
-                                            speedDownCount = 0;
-                                            $(".effects-container").find(".speedDown").remove();
-                                        }, 20000);
+                                        let speedDownSeconds = 20;
+                                        speedDownTime = setInterval(function() {
+                                            speedDownSeconds--;
+                                            if (speedDownSeconds <= 0) {
+                                                clearInterval(speedDownTime);
+                                                cycleTime = baseSpeed; // reset to normal speed after 20 seconds
+                                                $(".effects-container").find(".speedDown").remove();
+                                                speedDownCount = false;
+                                            }
+                                            $(".speedDown").html("Speed Down: " + speedDownSeconds + "s");
+                                        }, 1000);
                                         break;
+
                                     case "haze":
-                                        hazeCount++;
-                                        if (hazeCount > 1) {
-                                            clearTimeout(hazeTimeout);
-                                            clearInterval(effTimer);
-                                            effectTimer(".haze", "Haze:", 15);
-                                            hazeTimeout = setTimeout(function() {
-                                                $(".container").css("opacity", 1);
-                                                hazeCount = 0;
-                                                $(".effects-container").find(".haze").remove();
-                                            }, 15000);
-                                            break;
-                                        }   
+                                        if(hazeCount){
+                                            clearInterval(hazeTime);
+                                            $(".effects-container").find(".haze").remove();
+                                            $(".container").css("opacity", 1);
+                                        }
+                                        hazeCount = true;
                                         $(".container").css("opacity", 0.5);
                                         $(".effects-container").append('<h4 class="haze">Haze: 15s</h4>');
-                                        effectTimer(".haze", "Haze:", 15);
-                                        hazeTimeout = setTimeout(function() {
-                                            $(".container").css("opacity", 1);
-                                            $(".effects-container").find(".haze").remove();
-                                            hazeCount = 0;
-                                        },15000);
+                                        let hazeSeconds = 15;
+                                        hazeTime = setInterval(function() {
+                                            hazeSeconds--;
+                                            if (hazeSeconds <= 0) {
+                                                clearInterval(hazeTime);
+                                                $(".effects-container").find(".haze").remove();
+                                                $(".container").css("opacity", 1);
+                                                hazeCount = false;
+                                            }
+                                            $(".haze").html("Haze: " + hazeSeconds + "s");
+                                        },1000)
                                         break;
                                     case "glassCannon":
-                                        glassCannonCount++;
-                                        if (glassCannonCount > 1) {
-                                            clearTimeout(glassCannonTimeout);
-                                            clearInterval(effTimer);
-                                            effectTimer(".glassCannon", "Glass Cannon:", 15);
-                                            glassCannonTimeout = setTimeout(function() {
+                                        if(glassCannonCount){
+                                            clearInterval(glassCannonTime);
+                                            $(".effects-container").find(".glassCannon").remove();
+                                            glassCannonMultiplier = 1;
+                                        }
+                                        glassCannonCount = true;
+                                        glassCannonMultiplier = 2;
+                                        let glassSeconds = 15;
+                                        $(".effects-container").append('<h4 class="glassCannon">Glass Cannon: 15s</h4>');
+                                        glassCannonTime = setInterval(function() {
+                                            glassSeconds--;
+                                            if (glassSeconds <= 0) {
+                                                clearInterval(glassCannonTime);
                                                 glassCannonMultiplier = 1;
                                                 $(".effects-container").find(".glassCannon").remove();
-                                                glassCannonCount = 0;
-                                            }, 15000);
-                                            break;
-                                        }
-                                        glassCannonMultiplier = 2;
-                                        $(".effects-container").append('<h4 class="glassCannon">Glass Cannon: 15s</h4>');
-                                        effectTimer(".glassCannon", "Glass Cannon:", 15);
-                                        setTimeout(function() {
-                                            glassCannonMultiplier = 1;
-                                            $(".effects-container").find(".glassCannon").remove();
-                                            glassCannonCount = 0;
-                                        }, 15000);
+                                                glassCannonCount = false;
+                                            }
+                                           $(".glassCannon").html("Glass Cannon: " + glassSeconds + "s");
+                                        }, 1000);
                                         break;
                                     case "shrink":
-                                        shrinkCount++;
-                                        if (shrinkCount > 1) {
-                                            clearTimeout(shrinkTimeout);
-                                            clearInterval(effTimer);
-                                            effectTimer(".shrink", "Shrink:", 15);
-                                            shrinkTimeout = setTimeout(function() {
-                                                $(".main-grid-container-normal button, .main-grid-container-expert button").css("scale", "1");
-                                                $(".effects-container").find(".shrink").remove();
-                                                shrinkCount = 0;
-                                            }, 15000);
-                                            break;
-                                        }
-                                        $(".main-grid-container-normal button, .main-grid-container-expert button").css("scale", "0.75");
-                                        $(".effects-container").append('<h4 class="shrink">Shrink: 15s</h4>');
-                                        effectTimer(".shrink", "Shrink:", 15);
-                                        shrinkTimeout = setTimeout(function() {
+                                        if(shrinkCount){
+                                            clearInterval(shrinkTime);
                                             $(".main-grid-container-normal button, .main-grid-container-expert button").css("scale", "1");
                                             $(".effects-container").find(".shrink").remove();
-                                            shrinkCount = 0;
-                                        }, 15000);
-                                        break;
+                                        }
+                                        shrinkCount = true;
+                                        $(".main-grid-container-normal button, .main-grid-container-expert button").css("scale", "0.75");
+                                        $(".effects-container").append('<h4 class="shrink">Shrink: 15s</h4>');
+                                        let shrinkSeconds = 15;
+                                        shrinkTime = setInterval(function() {
+                                            shrinkSeconds--;
+                                            if (shrinkSeconds <= 0) {
+                                                clearInterval(shrinkTime);
+                                                $(".main-grid-container-normal button, .main-grid-container-expert button").css("scale", "1");
+                                                $(".effects-container").find(".shrink").remove();
+                                                shrinkCount = false;
+                                            }
+                                            $(".shrink").html("Shrink: " + shrinkSeconds + "s");
+                                        }, 1000);
+                                        break;  
                                 }
                             }
                         }
@@ -717,10 +713,11 @@
                         $(".container").fadeOut(500);
                         $(".game-over-menu").delay(1000).fadeIn(1000);
                         $(".over-title").html("Game Over!");
-                        $(".final-score").html("Your Final Score: " + (score * (accuracy / 100)).toFixed(1));
-                        $(".g-acc").html("Accuracy: " + accuracy + "%");
-                        $(".raw-acc").html("Raw Score: " + score);
-                        $(".time-elapsed").html("Time Elapsed: " + hours + ":" + minutes + ":" + seconds + "." + miliseconds);
+                        $(".final-score").html("Your Final Score: <span style='color:gold; font-size:1.5rem;'>" + (score * (accuracy / 100)).toFixed(1) + "</span>");
+                        $(".g-acc").html("Accuracy: <span style='color:#66f224'>" + accuracy + "%</span>");
+                        $(".raw-acc").html("Raw Score: <span style='color:#3845d6'>" + score + "</span>");
+                        $(".p-ups-obtained").html("Powerups Obtained: <span style='color:#eee'>" + totalPowerupsCollected + "</span>");
+                        $(".time-elapsed").html('Time Elapsed: <span style="color:#eee">' + hours + ':' + minutes + ':' + seconds + '.' + miliseconds + '</span>');
                     }
                 });
     
@@ -741,10 +738,11 @@
                             $(".container").fadeOut(500);
                             $(".game-over-menu").delay(1000).fadeIn(1000);
                             $(".over-title").html("Game Over!");
-                            $(".final-score").html("Your Final Score: " + (score * (accuracy / 100)).toFixed(1));
-                            $(".g-acc").html("Accuracy: " + accuracy + "%");
-                            $(".raw-acc").html("Raw Score: " + score);
-                            $(".time-elapsed").html("Time Elapsed: " + hours + ":" + minutes + ":" + seconds + "." + miliseconds);
+                            $(".final-score").html("Your Final Score: <span style='color:gold; font-size:1.5rem;'>" + (score * (accuracy / 100)).toFixed(1) + "</span>");
+                            $(".g-acc").html("Accuracy: <span style='color:#66f224'>" + accuracy + "%</span>");
+                            $(".raw-acc").html("Raw Score: <span style='color:#3845d6'>" + score + "</span>");
+                            $(".p-ups-obtained").html("Powerups Obtained: <span style='color:#eee'>" + totalPowerupsCollected + "</span>");
+                            $(".time-elapsed").html('Time Elapsed: <span style="color:#eee">' + hours + ':' + minutes + ':' + seconds + '.' + miliseconds + '</span>');
                         }
                     }
                     button.removeAttr('id').off("click"); // prevent clicking using .off
