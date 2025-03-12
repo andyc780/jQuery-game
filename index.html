@@ -98,7 +98,7 @@
             <div class="stats">
                 <h3 class="score">Score:<span style = "color:#2eb8b5"> 0 </span></h3>
                 <h3 class="acc">Accuracy:<span style = "color:#429820">100.00% </span></h3>
-                <h3 class="hp">Health: <span style ="color:#ec4048">100 HP</span></h3>
+                <h3 class="hp">Health: <span style ="color:#ec4048">-- HP</span></h3>
                 <h3 class="time-elapsed">Time Elapsed:  <span style = "color:#eba442">0:0:0.0 </span></h3> <!-- hrs:mins:secs.ms format of time elasped-->
                 <div class="game-buttons">
                     <button class="pause">Pause (P)</button>
@@ -106,7 +106,7 @@
                 </div>
             </div>
             <div class="effects-container">
-                <h3>Effects</h3>
+                <h3>Effects (Max 4)</h3>
                 <h5>No effects currently.</h5>
             </div>
         </div>
@@ -169,7 +169,7 @@
             <div class="stats">
                 <h3 class="score"> Score:<span style = "color:#2eb8b5"> 0 </span></h3>
                 <h3 class="acc">Accuracy:<span style = "color:#429820">100.00% </span></h3>
-                <h3 class="hp">Health: <span style ="color:#ec4048">100 HP</span></h3>
+                <h3 class="hp">Health: <span style ="color:#ec4048">-- HP</span></h3>
                 <h3 class="time-elapsed">  Time Elapsed: <span style = "color:#eba442">0:0:0.0</span></h3> <!-- hrs:mins:secs.ms format of time elasped-->
                 <div class="game-buttons">
                     <button class="pause">Pause (P)</button>
@@ -177,7 +177,7 @@
                 </div>
             </div>
             <div class="effects-container">
-                <h3>Effects</h3>
+                <h3>Effects (Max 4)</h3>
                 <h5>No effects currently.</h5>
             </div>
         </div>
@@ -207,7 +207,8 @@
         let totalCount = 0 + accuracyBuffer;
         let misses = 0;
         let accuracy = 1;
-        let health = 100;
+        let health;
+        let maxHealth;
         let temp;
         let inGame = false;
         
@@ -259,17 +260,13 @@
         });
 
         $('.end-game').on("click", function(){
-            inGame = false; // prevent pause from being clicked again
-            $(".container").fadeOut(500);
-            $(".pause-menu").fadeOut(500);
-            $(".game-over-menu").delay(1000).fadeIn(1000);
-            $(".over-title").html("Game Ended Early");
-            inGame = false;
             clearInterval(timerElapsed);
             clearInterval(timer);
+            inGame = false; // prevent pause from being clicked again
+            $(".pause-menu").fadeOut(500);
+            $(".over-title").html("Game Ended Early");
             $(".container").fadeOut(500);
             $(".game-over-menu").delay(1000).fadeIn(1000);
-            $(".over-title").html("Game Over!");
             $(".final-score").html("Your Final Score: " + (score * (accuracy / 100)).toFixed(1));
             $(".g-acc").html("Accuracy: " + accuracy + "%");
             $(".raw-acc").html("Raw Score: " + score);
@@ -340,43 +337,6 @@
         $(".restart").on("click", function(){
             location.reload();
         });
-
-    
-        // TESTING PURPOSES DELETE LATER
-            // $(".good").on("click", function(){
-            //     score++;
-            //     totalCount++;
-            //     if(health < 100 && (health + 0.5) < 100){
-            //         health += 0.5;
-            //     }
-            //     else{
-            //         health += (100 - health);
-            //     }
-            //     accuracy = ((totalCount - misses) / totalCount * 100).toFixed(2);
-            //     $(".score").html("<h4>Score: " + score + "</h4>");
-            //     $(".acc").html("<h4>Accuracy: " + accuracy + "%</h4>");
-            //     $(".hp").html('<h4>Health: <span style="color:#ec4048"> ' + health + ' HP</span></h4>');
-
-            // });
-            // $(".bad").on("click", function(){
-            //     score--;
-            //     totalCount++;
-            //     misses++;
-            //     health -= 25;
-            //     accuracy = ((totalCount - misses) / totalCount * 100).toFixed(2);
-            //     $(".score").html("<h4>Score: " + score + "</h4>");
-            //     $(".acc").html("<h4>Accuracy: " + accuracy + "%</h4>");
-            //     $(".hp").html('<h4>Health: <span style="color:#ec4048"> ' + health + ' HP</span></h4>');
-            //     if(health <= 0){
-            //         inGame = false;
-            //         clearInterval(timerElapsed);
-            //         $(".container").fadeOut(500);
-            //         $(".game-over-menu").delay(1000).fadeIn(1000);
-            //     }
-            // });
-
-
-
     // all the painful logic is located starting down here. 
     // Timer function for the game, also recorded when the game ends.
         function startCountDown(){
@@ -429,7 +389,17 @@
         }
 
         // The main game starting function
-        // all square button declaration here, will be changed depending on the difficulty.
+        // all square button declaration here, will be changed depending on the difficulty.\
+        let randomEffects = [
+            "speedUp",
+            "speedDown",
+            "haze",
+            "gamblersDice",
+            "glassCannon",
+            "shrink",
+            "expand",
+            "mysteriousMushroom"
+        ]
         let buttonEffects = [
             "good1",
             "good2",
@@ -438,7 +408,8 @@
             "bad1",
             "bad2",
             "bad3",
-            "mystery"
+            "mystery",
+            // "effect" // testing remove later
         ]
         let totalButtons;
         let cycleButtonAmount;
@@ -446,18 +417,12 @@
         let buttons; // store button data based on difficulty later
         let delay;
         function startGame(difficulty){
-            // "speedUp",
-            // "speedDown",
-            // "haze",
-            // "gamblersDice",
-            // "glassCannon",
-            // "shrink",
-            // "expand",
-            // "mysteriousMushroom"
-           
             startTimer();
             inGame = true;
             if(difficulty == "normal"){
+                health = 100;
+                maxHealth = 100;
+                $(".hp").html('<h4>Health: <span style="color:#ec4048"> ' + health + ' HP</span></h4>')
                 totalButtons = 25;
                 cycleButtonAmount = 8;
                 cycleTime = 5000;
@@ -466,8 +431,11 @@
 
             } 
             if(difficulty == "expert"){
+                health = 25;
+                maxHealth = 25
+                $(".hp").html('<h4>Health: <span style="color:#ec4048"> ' + health + ' HP</span></h4>');
                 totalButtons = 36;
-                cycleButtonAmount = 14; // how many buttons can exists in a cycle.
+                cycleButtonAmount = 20; // how many buttons can exists in a cycle. 
                 cycleTime = 4500;
                 buttons = $(".main-grid-container-expert button"); // collect buttons
             }
@@ -482,6 +450,17 @@
         function selectRandomButtons(buttons , cycleButtonAmount){
             let finalRandomButton = [];
             let selectSingleButton;
+
+             // Roll a random chance for an effect to appear in this specific cycle.
+             // If the chance is hit, it will reduce the cycleButtonAmount by 1 and instead replace it with the effect button
+             // 10% chance per cycle for an effect to appear
+            // let chance = Math.floor(Math.random() * 10) + 1;
+            // if(chance == 5){
+            //     cycleButtonAmount--; // decrement total buttons by 1 for room.
+            //     let selectEffect = randomEffects[Math.floor(Math.random() * randomEffects.length)];
+            //     finalRandomButton.push(selectEffect);
+
+            // }
             for(let i = 0; i < cycleButtonAmount; i++){
                 selectSingleButton = Math.floor(Math.random() * buttons.length);
                 // finalRandomButton.push(selectSingleButton);
@@ -512,38 +491,38 @@
                     switch(randomSquare) {
                         case "good1":
                             score += 1;
-                            if(health < 100 && (health + 0.5) < 100){
+                            if(health < maxHealth && (health + 0.5) < maxHealth){
                                 health += 0.5;
                             }
                             else{
-                                health += (100 - health);
+                                health += (maxHealth - health);
                             }
                             break;
                         case "good2":
                             score += 2;
-                            if(health < 100 && (health + 0.5) < 100){
+                            if(health < maxHealth && (health + 0.5) < maxHealth){
                                 health += 0.5;
                             }
                             else{
-                                health += (100 - health);
+                                health += (maxHealth - health);
                             }                            
                             break;
                         case "good3":
                             score += 5;
-                            if(health < 100 && (health + 0.7) < 100){
+                            if(health < maxHealth && (health + 0.5) < maxHealth){
                                 health += 0.5;
                             }
                             else{
-                                health += (100 - health);
+                                health += (maxHealth - health);
                             }
                             break;
                         case "good4":
                             score += 8;
-                            if(health < 100 && (health + 1) < 100){
+                            if(health < maxHealth && (health + 1) < maxHealth){
                                 health += 1;
                             }
                             else{
-                                health += (100 - health);
+                                health += (maxHealth - health);
                             }
                             break;
                         case "bad1":
@@ -566,11 +545,11 @@
                             let randomHealth = Math.floor(Math.random() * 8) - 5; // random number between -5 and 2
                             score += randomScore;
                             health += randomHealth;
-                            if(health < 100 && (health + randomHealth) < 100){
+                            if(health < maxHealth && (health + randomHealth) < maxHealth){
                                 health += randomHealth;
                             }
                             else{
-                                health += (100 - health);
+                                health += (maxHealth - health);
                             }
                             break;
                             
@@ -594,7 +573,7 @@
                         $(".time-elapsed").html("Time Elapsed: " + hours + ":" + minutes + ":" + seconds + "." + miliseconds);
                     }
                 });
-                
+    
                 // Fade out the buttons after a certain set amount of time
                 delay = setTimeout(function(){
                     // If a good button was not clicked before this timeout function occurs, health will be reduced and so as accuracy.
@@ -619,7 +598,7 @@
                         }
                     }
                     button.removeAttr('id').off("click"); // prevent clicking using .off
-                }, (cycleTime - 1000));
+                }, (cycleTime - (cycleTime * 0.1)));
              }
         }
 });
