@@ -7,6 +7,29 @@
 as the user approaches bounds outside of this world. */
 body{
     background-color:#a3c4e3;
+    transition: background-color 7.5s ease;
+}
+/* .colorholder{
+    background-color: #4488c8;
+    background-color: #0b238b;
+    background-color: #051e47;
+} */
+.stars{
+    background-color: rgb(255, 234, 0);
+    width: 30px;
+    height: 30px;
+    border-radius: 100%;
+    box-shadow: 2px 2px 2px gold;
+    z-index: -2;
+}
+.clouds{
+    background-color #eee;
+    opacity: 0.5;
+    width: 200px;
+    height:200px;
+    border-radius: 100%;
+    box-shadow: 2px 2px 2px #ccc;
+    z-index: -2;
 }
 .intro-menu{
     width: 600px;
@@ -290,8 +313,7 @@ button:hover{
 /* colors for the different effect of buttons here. */
 /* very colorful indeed */
 #good1{
-    background-color:#77b4ed;
-    
+    background-color:#77b4ed;    
 }
 #good2{
     background-color: rgb(151, 234, 151);
@@ -302,6 +324,7 @@ button:hover{
 #good4{
     background-color: rgb(243, 213, 42);
 }
+
 #bad1{
     background-color: rgb(233, 99, 99);
 }
@@ -311,36 +334,13 @@ button:hover{
 #bad3{
     background-color: rgb(141, 30, 141);
 }
+
 #mystery{
     background-color: rgb(141, 137, 137);
 }
 #effect{
     background-color: #ff8903;
 }
-/* .speedUp{
-
-}
-.speedDown{
-
-}
-.haze{
-
-}
-.gamblersDice{
-
-}
-.glassCannon{
-
-}
-.shrink{
-
-}
-.expand{
-
-}
-.mysteriousMushroom{
-
-} */
 
 
 

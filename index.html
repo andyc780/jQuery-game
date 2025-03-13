@@ -367,36 +367,63 @@
         let seconds = 0;
         let minutes = 0;
         let hours = 0;
+        let totalSeconds = 0; // used for time events
         function startTimer(){
             timerElapsed = setInterval(function(){
                 miliseconds += 1;
                 if(miliseconds == 10){
                     miliseconds = 0;
                     seconds += 1;
+                    totalSeconds += 1;
                 }
                 if(seconds == 60){
                     seconds = 0;
                     minutes += 1;
+
                 }
                 if(minutes == 60){
                     minutes = 0;
                     hours += 1;
-                }   
+                }
+                if(totalSeconds == 60){
+                    $("body").css({
+                        backgroundColor: "#4488c8"
+                    });
+                    console.log("Stage 1");
+                }
+                if(totalSeconds == 120){
+                    $("body").css({
+                        backgroundColor: "#0b238b"
+                    });
+                    generateClouds();
+                    console.log("Stage 2");
+                }
+                if(totalSeconds == 165){
+                    $("body").css({
+                        backgroundColor: "#051e47"
+                    });
+                    console.log("Stage 3");
+                }
+                if(totalSeconds == 210){
+                    $("body").css({
+                        backgroundColor: "#333"
+                    });
+                    generateStars();
+                    console.log("Stage 4");
+                }
+                // Events as the time progresses throughout the game.
                 $(".time-elapsed").html('<h4>Time Elapsed: <span style="color:#eba442">' + hours + ':' + minutes + ':' + seconds + '.' + miliseconds + '</span></h4>');
             },100);
         }
 
-        // function effectTimer(event, name, duration){
-        //     effectSeconds += duration
-        //     effTimer = setInterval(function(){
-        //         effectSeconds --;
-        //         if(effectSeconds <= 0){
-        //             clearInterval(effTimer);
-        //         }
-        //         $(event).html(name + " " + effectSeconds + "s");
-        //     }, 1000);
-        // }
+        function generateStars(){
+            // When stage 4 is reached, starts will start appearing in the background.
 
+        }
+        function generateClouds(){
+            // When stage 2 is reached, clouds will start appearing in the background, however it will be removed in stage 3.
+
+        }
         // The main game starting function
         // all square button declaration here, will be changed depending on the difficulty.\
         let randomEffects = [
@@ -442,11 +469,11 @@
             startTimer();
             inGame = true;
             if(difficulty == "normal"){
-                health = 100 + 2000000;
-                maxHealth = 100 + 2000000;
+                health = 100;
+                maxHealth = 100;
                 $(".hp").html('<h4>Health: <span style="color:#ec4048"> ' + health + ' HP</span></h4>')
                 totalButtons = 25;
-                cycleButtonAmount = 8;
+                cycleButtonAmount = 9;
                 cycleTime = 5000;
                 baseSpeed = cycleTime;
                 buttons = $(".main-grid-container-normal button"); // collect buttons
@@ -458,7 +485,7 @@
                 maxHealth = 50;
                 $(".hp").html('<h4>Health: <span style="color:#ec4048"> ' + health + ' HP</span></h4>');
                 totalButtons = 36;
-                cycleButtonAmount = 18; // how many buttons can exists in a cycle. 
+                cycleButtonAmount = 20; // how many buttons can exists in a cycle. 
                 cycleTime = 4500;
                 baseSpeed = cycleTime;
                 
@@ -481,7 +508,7 @@
              // Roll a random chance for an effect to appear in this specific cycle.
              // If the chance is hit, it will reduce the cycleButtonAmount by 1 and instead replace it with the effect button
              // 10% chance per cycle for an effect to appear
-            let chance = Math.floor(Math.random() * 11) + 1;
+            let chance = Math.floor(Math.random() * 9) + 1;
             if(chance == 5){
                 hasEffect = true;
                 selectEffect = randomEffects[Math.floor(Math.random() * randomEffects.length)];
@@ -528,7 +555,7 @@
                                             cycleTime = baseSpeed;
                                         }
                                         speedUpCount = true;
-                                        cycleTime = cycleTime - (cycleTime * 0.5); // 25% faster
+                                        cycleTime = cycleTime - 1000; // 1 second faster
                                         $(".effects-container").append('<h4 class="speedUp">Speed Up: 20s</h4>');
                                         let speedUpSeconds = 20;
                                         speedUpTime = setInterval(function() {
@@ -550,7 +577,7 @@
                                             cycleTime = baseSpeed;
                                         }
                                         speedDownCount= true;
-                                        cycleTime = cycleTime + (cycleTime * 0.5); // 50% slower
+                                        cycleTime = cycleTime + 1500 // 1.5 seconds slower
                                         $(".effects-container").append('<h4 class="speedDown">Speed Down: 20s</h4>');
                                         let speedDownSeconds = 20;
                                         speedDownTime = setInterval(function() {
@@ -572,7 +599,7 @@
                                             $(".container").css("opacity", 1);
                                         }
                                         hazeCount = true;
-                                        $(".container").css("opacity", 0.5);
+                                        $(".container").css("opacity", 0.35 );
                                         $(".effects-container").append('<h4 class="haze">Haze: 15s</h4>');
                                         let hazeSeconds = 15;
                                         hazeTime = setInterval(function() {
@@ -614,7 +641,7 @@
                                             $(".effects-container").find(".shrink").remove();
                                         }
                                         shrinkCount = true;
-                                        $(".main-grid-container-normal button, .main-grid-container-expert button").css("scale", "0.75");
+                                        $(".main-grid-container-normal button, .main-grid-container-expert button").css("scale", "0.7");
                                         $(".effects-container").append('<h4 class="shrink">Shrink: 15s</h4>');
                                         let shrinkSeconds = 15;
                                         shrinkTime = setInterval(function() {
@@ -746,7 +773,7 @@
                         }
                     }
                     button.removeAttr('id').off("click"); // prevent clicking using .off
-                }, (cycleTime - (cycleTime * 0.1)));
+                }, (cycleTime - 1000));
              }
         }
 });
