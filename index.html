@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- The welcome menu that lets you choose the difficultyu of the game and start it. -->
+    <!-- The welcome menu that lets you choose the difficulty of the game and start it. -->
     <div class="intro-menu">
         <div class="intro-items">
             <h1>Blitz Clicker</h1>
@@ -21,7 +21,63 @@
             <button class="submit">Start Game</button>
         </div>
     </div>
-
+<div class="banners">
+    <div class="s-1-box">
+        <div class="stage-1-banner">
+            <h2> Stage 1 </h2>
+            <h4>Humble Begnninngs</h4>
+            <h4>What advendtures lie ahead of you?</h4>
+            <h4>(No effects here)</h4>
+        </div>
+    </div>
+    <div class="s-2-box">
+        <div class="stage-2-banner">
+            <h2>Stage 2</h2>
+            <h4>Rising Heights</h4>
+            <h4>Going up... and never back down.</h4>
+            <h4> +30 Points, +10 HP</h4>
+        </div>
+    </div>
+    <div class="s-3-box">
+        <div class="stage-3-banner">
+            <h2>Stage 3</h2>
+            <h4>Soaring Above the Clouds</h4>
+            <h4>Pretty high up here huh?</h4>
+            <h4> +15 HP, +50 Points</h4>
+        </div>
+    </div>
+    <div class="s-4-box">
+        <div class="stage-4-banner">
+            <h2>Final Stage</h2>
+            <h4>Into the Starry Night</h4>
+            <h4>You begin to grow weaker as time passes...</h4>
+            <h4> +80 Points, Accuracy % Boost</h4>
+        </div>
+    </div>
+    <div class="f-box fatigue-1">
+        <div class="fatigue-1-banner">
+            <h2>Fatigue Sets In</h2>
+            <h4>Your body begins to relax...</h4>
+            <h4> -5 HP, x2 Accuracy Penalty</h4>
+        </div>
+    </div>
+    <div class="f-box fatigue-2">
+        <div class="fatigue-2-banner">
+            <h2>Your Consciousness Fades...</h2>
+            <h4>It's getting dark...</h4>
+            <h4> -10 HP, + Point Gain Reduced by 1. </h4>
+        </div>
+    </div>
+    <div class="f-box fatigue-3">
+        <div class="fatigue-3-banner">
+            <h2>Exhaustion.</h2>
+            <h4>This is the end. It's over</h4>
+            <h4>Your health decays (-1 HP/2 Seconds)</h4>
+            <h4>Health Reduction Penalty Doubled.</h4>
+            <h4> +5 Tile Density</h4>
+        </div>
+    </div>
+</div>
     <!-- The menu when the game is over, displays the final score and other statistics. -->
     <div class="game-over-menu">
         <div class="game-over-items">
@@ -193,6 +249,18 @@
     $(".main-grid-container-expert").hide();
     $(".pause-menu").hide();
     $(".countdown-area").hide();
+
+    $(".s-1-box").hide();
+    $(".s-2-box").hide();
+    $(".s-3-box").hide();
+    $(".s-4-box").hide();
+    $(".fatigue-1").hide();
+    $(".fatigue-2").hide();
+    $(".fatigue-3").hide();
+
+    // $(".fatigue-3").show();
+
+
     $(document).ready(function(){
         // $(".intro-menu").hide();
         // intitalize variables for the game
@@ -262,9 +330,9 @@
             clearInterval(timerElapsed);
             clearInterval(timer);
             inGame = false; // prevent pause from being clicked again
-            $(".pause-menu").fadeOut(500);
-            $(".over-title").html("Game Ended Early");
             $(".container").fadeOut(500);
+            $(".pause-menu").fadeOut(500);  
+            $(".over-title").html("Game Ended Early");
             $(".game-over-menu").delay(1000).fadeIn(1000);
             $(".final-score").html("Your Final Score: <span style='color:gold; font-size:1.5rem;'>" + (score * (accuracy / 100)).toFixed(1) + "</span>");
             $(".g-acc").html("Accuracy: <span style='color:#66f224'>" + accuracy + "%</span>");
@@ -363,6 +431,14 @@
                 $(".countdown-area").html(seconds);
             }, 1000);
         }
+        // Variables for fatigue and stage events
+        let accuracyPenaltyMultiplier = 1;
+        let hpReductionMultiplier = 1;
+        let pointReduction = 0;
+        let hpDecay;
+        let tileDensity = 5;
+
+        // Variables for timer function
         let miliseconds = 0;
         let seconds = 0;
         let minutes = 0;
@@ -385,45 +461,187 @@
                     minutes = 0;
                     hours += 1;
                 }
-                if(totalSeconds == 60){
+                if(totalSeconds == 5){ // 1 minute in the game 60s Stage 1
                     $("body").css({
                         backgroundColor: "#4488c8"
                     });
-                    console.log("Stage 1");
+                    $(".s-1-box").show().css({
+                        opacity: 0,
+                        top: '0%'
+                    }).animate({
+                        opacity: 1,
+                        top: '2%'
+                    }, 1000).delay(4000).fadeOut(1000);
                 }
-                if(totalSeconds == 120){
+                if(totalSeconds == 10){ // 1 minute and 45 seconds into the game 105s Stage 2
                     $("body").css({
                         backgroundColor: "#0b238b"
                     });
+
+                    score += 3;
+                    $(".score").html('<h3>Score: <span style = "color:#2eb8b5"> ' + score + '</span></h3>');
+                    if((health + 10) > maxHealth){ // if the health is above the max, set it to the max
+                        health = maxHealth;
+                    } else {
+                        health += 1; // +10 HP
+                    }
+                    $(".hp").html('<h4>Health: <span style="color:#ec4048"> ' + health + ' HP</span></h4>');
+
+
+                    $(".s-2-box").show().css({
+                        opacity: 0,
+                        top: '0%'
+                    }).animate({
+                        opacity: 1,
+                        top: '2%'
+                    }, 1000).delay(4000).fadeOut(1000);
                     generateClouds();
-                    console.log("Stage 2");
                 }
-                if(totalSeconds == 165){
+                if(totalSeconds == 15){ // 2 minutes and 45 seconds into the game 165s Stage 3
                     $("body").css({
                         backgroundColor: "#051e47"
                     });
-                    console.log("Stage 3");
+                    score += 5;
+                    $(".score").html('<h3>Score: <span style = "color:#2eb8b5"> ' + score + '</span></h3>');
+                    if((health + 15) > maxHealth){ // if the health is above the max, set it to the max
+                        health = maxHealth;
+                    } else {
+                        health += 1; // +15 HP
+                    }
+                    $(".s-3-box").show().css({
+                        opacity: 0,
+                        top: '0%'
+                    }).animate({
+                        opacity: 1,
+                        top: '2%'
+                    }, 1000).delay(4000).fadeOut(1000);
+                    fadeClouds();
                 }
-                if(totalSeconds == 210){
+                if(totalSeconds == 20){ // 3 minutes and 30 seconds into the game 210s Stage 4
                     $("body").css({
-                        backgroundColor: "#333"
+                        backgroundColor: "#121212"
                     });
+                    score += 8;
+                    $(".score").html('<h3>Score: <span style = "color:#2eb8b5"> ' + score + '</span></h3>');
+                    $(".s-4-box").show().css({
+                        opacity: 0,
+                        top: '0%'
+                    }).animate({
+                        opacity: 1,
+                        top: '2%'
+                    }, 1000).delay(4000).fadeOut(1000);
                     generateStars();
-                    console.log("Stage 4");
                 }
+
+                if(totalSeconds == 25){ // 4 minutes and 30 seconds into the game 270s Fatigue 1
+                    $(".fatigue-1").show();
+                    accuracyPenaltyMultiplier = 2;
+                    health -= 0.5; // -0.5 HP per 0.1s
+                    $(".hp").html('<h4>Health: <span style="color:#ec4048"> ' + health + ' HP</span></h4>');
+                    if(health <= 0){
+                        gameOver();
+                    }
+                    $(".fatigue-1").show().css({
+                        opacity: 0,
+                        top: '0%'
+                    }).animate({
+                        opacity: 1,
+                        top: '2%'
+                    }, 1000).delay(4000).fadeOut(1000);
+                }
+                if(totalSeconds == 30) // 5 minutes and 30 seconds into the game 330s Fatigue 2
+                {
+                    $(".fatigue-2").show();
+                    health -= 1; // -1 HP per 0.1s
+                    $(".hp").html('<h4>Health: <span style="color:#ec4048"> ' + health + ' HP</span></h4>');
+                    pointReduction = 1;
+                    if(health <= 0){
+                        gameOver();
+                    }
+                    $(".fatigue-2").show().css({
+                        opacity: 0,
+                        top: '0%'
+                    }).animate({
+                        opacity: 1,
+                        top: '2%'
+                    }, 1000).delay(4000).fadeOut(1000);
+                }
+                if(totalSeconds == 35){ // 6 minutes and 30 seconds into the game 390s Fatigue 3
+                    $(".fatigue-3").show();
+                    hpReductionMultiplier = 2;
+                    cycleButtonAmount += 5;
+                    $(".fatigue-3").show().css({
+                        opacity: 0,
+                        top: '0%'
+                    }).animate({
+                        opacity: 1,
+                        top: '2%'
+                    }, 1000).delay(4000).fadeOut(1000);
+                    hpDecay = setInterval(function(){
+                        health -= 1
+                        if(health <= 0){
+                            clearInterval(hpDecay);
+                            gameOver();
+                        }
+                    }, 2000);
+                }
+
+                // Fatigue Events
                 // Events as the time progresses throughout the game.
                 $(".time-elapsed").html('<h4>Time Elapsed: <span style="color:#eba442">' + hours + ':' + minutes + ':' + seconds + '.' + miliseconds + '</span></h4>');
             },100);
         }
-
+        function gameOver(){
+            clearInterval(timerElapsed);
+            clearInterval(timer);
+            inGame = false; // prevent pause from being clicked again
+            $(".pause-menu").fadeOut(500);
+            $(".over-title").html("Game Over!");
+            $(".container").fadeOut(500);
+            $(".game-over-menu").delay(1000).fadeIn(1000);
+            $(".final-score").html("Your Final Score: <span style='color:gold; font-size:1.5rem;'>" + (score * (accuracy / 100)).toFixed(1) + "</span>");
+            $(".g-acc").html("Accuracy: <span style='color:#66f224'>" + accuracy + "%</span>");
+            $(".raw-acc").html("Raw Score: <span style='color:#3845d6'>" + score + "</span>");
+            $(".p-ups-obtained").html("Powerups Obtained: <span style='color:#eee'>" + totalPowerupsCollected + "</span>");
+            $(".time-elapsed").html('Time Elapsed: <span style="color:#eee">' + hours + ':' + minutes + ':' + seconds + '.' + miliseconds + '</span>');
+        }
         function generateStars(){
-            // When stage 4 is reached, starts will start appearing in the background.
+            // When stage 4 is reached, stars will start appearing in the background.
+            let starCount = 15; // number of stars to generate * 10
+            for (let i = 0; i < starCount; i++) {
+                let stars = $('<div class="stars"></div>');
+                let randomTop = Math.floor(Math.random() * 100) + 1; // random top position between 1 and 100
+                let randomLeft = Math.floor(Math.random() * 100) + 1; // random left position between 1 and 100
+                stars.css({
+                    position: 'absolute',
+                    top: randomTop + 'vh',
+                    left: randomLeft + 'vw'
+                });
+                $('body').append(stars);
+            }
 
         }
         function generateClouds(){
             // When stage 2 is reached, clouds will start appearing in the background, however it will be removed in stage 3.
-
+            let cloudCount = 2; // number of clouds to generate * 10.
+            for (let i = 0; i < cloudCount; i++) {
+                let clouds = $('<div class="clouds"></div>');
+                let randomTop = Math.floor(Math.random() * 100) + 1; // random top position between 1 and 100
+                let randomLeft = Math.floor(Math.random() * 100) + 1; // random left position between 1 and 100
+                clouds.css({
+                    position: 'absolute',
+                    top: randomTop + 'vh',
+                    left: randomLeft + 'vw'
+                });
+                $('body').append(clouds);
+            }
         }
+        function fadeClouds(){
+            $(".clouds").fadeOut(2000, function() {
+                $(this).remove();
+            });
+        }
+
         // The main game starting function
         // all square button declaration here, will be changed depending on the difficulty.\
         let randomEffects = [
@@ -599,7 +817,7 @@
                                             $(".container").css("opacity", 1);
                                         }
                                         hazeCount = true;
-                                        $(".container").css("opacity", 0.35 );
+                                        $(".container").css("opacity", 0.45);
                                         $(".effects-container").append('<h4 class="haze">Haze: 15s</h4>');
                                         let hazeSeconds = 15;
                                         hazeTime = setInterval(function() {
@@ -703,17 +921,17 @@
                         case "bad1":
                             score -= 3 * glassCannonMultiplier;
                             misses++;
-                            health -= 5 * glassCannonMultiplier;
+                            health -= 5 * glassCannonMultiplier * hpReductionMultiplier;
                             break;
                         case "bad2":
                             score -= 5 * glassCannonMultiplier;
                             misses++;
-                            health -= 7 * glassCannonMultiplier;
+                            health -= 7 * glassCannonMultiplier * hpReductionMultiplier;
                             break;
                         case "bad3":
                             score -= 10 * glassCannonMultiplier;
                             misses++;
-                            health -= 10 * glassCannonMultiplier;
+                            health -= 10 * glassCannonMultiplier * hpReductionMultiplier;
                             break;
                         case "mystery":
                             let randomScore = Math.floor(Math.random() * 31) - 15; // random number between -15 and 15
@@ -734,17 +952,7 @@
                     $(".acc").html('<h4>Accuracy: <span style="color:#429820">' + accuracy + '%</span></h4>');
                     $(".hp").html('<h4>Health: <span style="color:#ec4048"> ' + health + ' HP</span></h4>');
                     if(health <= 0){
-                        inGame = false;
-                        clearInterval(timerElapsed);
-                        clearInterval(timer);
-                        $(".container").fadeOut(500);
-                        $(".game-over-menu").delay(1000).fadeIn(1000);
-                        $(".over-title").html("Game Over!");
-                        $(".final-score").html("Your Final Score: <span style='color:gold; font-size:1.5rem;'>" + (score * (accuracy / 100)).toFixed(1) + "</span>");
-                        $(".g-acc").html("Accuracy: <span style='color:#66f224'>" + accuracy + "%</span>");
-                        $(".raw-acc").html("Raw Score: <span style='color:#3845d6'>" + score + "</span>");
-                        $(".p-ups-obtained").html("Powerups Obtained: <span style='color:#eee'>" + totalPowerupsCollected + "</span>");
-                        $(".time-elapsed").html('Time Elapsed: <span style="color:#eee">' + hours + ':' + minutes + ':' + seconds + '.' + miliseconds + '</span>');
+                       gameOver();
                     }
                 });
     
@@ -752,24 +960,14 @@
                 delay = setTimeout(function(){
                     // If a good button was not clicked before this timeout function occurs, health will be reduced and so as accuracy.
                     if (button.attr('id') && button.attr('id').includes('good')) {
-                        health -= 3;
+                        health -= 3 * hpReductionMultiplier;
                         totalCount++;
                         misses++;
                         accuracy = ((totalCount - misses) / totalCount * 100).toFixed(2);
                         $(".hp").html('<h4>Health: <span style="color:#ec4048"> ' + health + ' HP</span></h4>');
                         $(".acc").html('<h4>Accuracy: <span style="color:#429820">' + accuracy + '%</span></h4>');
                         if (health <= 0) {
-                            inGame = false;
-                            clearInterval(timerElapsed);
-                            clearInterval(timer);
-                            $(".container").fadeOut(500);
-                            $(".game-over-menu").delay(1000).fadeIn(1000);
-                            $(".over-title").html("Game Over!");
-                            $(".final-score").html("Your Final Score: <span style='color:gold; font-size:1.5rem;'>" + (score * (accuracy / 100)).toFixed(1) + "</span>");
-                            $(".g-acc").html("Accuracy: <span style='color:#66f224'>" + accuracy + "%</span>");
-                            $(".raw-acc").html("Raw Score: <span style='color:#3845d6'>" + score + "</span>");
-                            $(".p-ups-obtained").html("Powerups Obtained: <span style='color:#eee'>" + totalPowerupsCollected + "</span>");
-                            $(".time-elapsed").html('Time Elapsed: <span style="color:#eee">' + hours + ':' + minutes + ':' + seconds + '.' + miliseconds + '</span>');
+                           gameOver();
                         }
                     }
                     button.removeAttr('id').off("click"); // prevent clicking using .off

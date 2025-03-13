@@ -9,28 +9,108 @@ body{
     background-color:#a3c4e3;
     transition: background-color 7.5s ease;
 }
-/* .colorholder{
-    background-color: #4488c8;
-    background-color: #0b238b;
-    background-color: #051e47;
-} */
+
 .stars{
     background-color: rgb(255, 234, 0);
-    width: 30px;
-    height: 30px;
+    width: 10px;
+    height: 10px;
     border-radius: 100%;
     box-shadow: 2px 2px 2px gold;
     z-index: -2;
+    opacity: 0.5;
 }
 .clouds{
-    background-color #eee;
-    opacity: 0.5;
-    width: 200px;
-    height:200px;
+    background-color: #eee;
+    opacity: 0.25;
+    width: 350px;
+    height:150px;
     border-radius: 100%;
     box-shadow: 2px 2px 2px #ccc;
     z-index: -2;
+    
 }
+.s-1-box{
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 400px;
+    height: 120px;
+    /* Simple nature background image */
+    background-image: url('https://cdn.vectorstock.com/i/500p/49/65/landscape-green-meadow-field-vector-33844965.jpg');
+    border-radius: 10px;
+    border: 2px solid rgb(101, 190, 224);
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.s-2-box{
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 400px;
+    height: 120px;
+    background-image: url('https://static.vecteezy.com/system/resources/thumbnails/003/467/246/small_2x/nature-landscape-background-cute-simple-cartoon-style-free-vector.jpg');
+    border-radius: 10px;
+    border: 2px solid rgb(101, 190, 224);
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.s-3-box{
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 400px;
+    height: 120px;
+    background-image: url('https://media.istockphoto.com/id/827250930/vector/mountain-forest-meadow-landscape.jpg?s=612x612&w=0&k=20&c=WgX2mtTJWSrEvmYVSElIdUdGbdqA5VmJf38Yyz-RlPE=');
+    border-radius: 10px;
+    border: 2px solid rgb(101, 190, 224);
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.s-4-box{
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 400px;
+    height: 120px;
+    background-image: url('https://www.shutterstock.com/image-vector/cartoon-starry-pattern-cosmic-stars-600nw-1963034404.jpg');
+    border-radius: 10px;
+    border: 2px solid rgb(101, 190, 224);
+    color:#fafa90;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.f-box{
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 400px;
+    height: 150px;
+    background-image: url('https://www.shutterstock.com/image-vector/cartoon-starry-pattern-cosmic-stars-600nw-1963034404.jpg');
+    background-blend-mode: overlay;
+    background-color: rgba(255, 0, 0, 0.3);
+    border-radius: 10px;
+    border: 2px solid rgb(166, 30, 30);
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #ededed;
+}
+
+
 .intro-menu{
     width: 600px;
     height:350px;
