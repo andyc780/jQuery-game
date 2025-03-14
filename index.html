@@ -22,11 +22,19 @@
         </div>
     </div>
 <div class="banners">
+    <div class="s-0-box">
+        <div class="stage-0-banner">
+            <h2>The Beginning <h2>
+            <h4>Preparing to Launch...</h4>
+            <h4>Get ready to click!</h4>
+            <h4>Don't let your HP drop!</h4>
+        </div>
+    </div>
     <div class="s-1-box">
         <div class="stage-1-banner">
             <h2> Stage 1 </h2>
             <h4>Humble Begnninngs</h4>
-            <h4>What advendtures lie ahead of you?</h4>
+            <h4>What adventures lie ahead of you?</h4>
             <h4>(No effects here)</h4>
         </div>
     </div>
@@ -58,7 +66,7 @@
         <div class="fatigue-1-banner">
             <h2>Fatigue Sets In</h2>
             <h4>Your body begins to relax...</h4>
-            <h4> -5 HP, x2 Accuracy Penalty</h4>
+            <h4> -5 HP, x2 Accuracy Penalty, +2 Tile Density</h4>
         </div>
     </div>
     <div class="f-box fatigue-2">
@@ -72,7 +80,7 @@
         <div class="fatigue-3-banner">
             <h2>Exhaustion.</h2>
             <h4>This is the end. It's over</h4>
-            <h4>Your health decays (-1 HP/4 Seconds)</h4>
+            <h4>Your health decays (-1 HP/3 Seconds)</h4>
             <h4>Health Reduction Penalty Doubled.</h4>
             <h4> +5 Tile Density</h4>
         </div>
@@ -88,7 +96,7 @@
             </div>
             <h3 class ="p-ups-obtained">Powerups Obtained:</h3>
             <h3 class ="time-elapsed">Time Survived: -:-:-.-</h3>
-            <div class="end-quote"><em>"Random End Quote Here. Resistance is futile, rest easy now."</em></div>
+            <div class="end-quote"><em></em></div>
             <div class="restart-button">
                 <button class="restart">Restart Game</button>
             </div>
@@ -250,6 +258,7 @@
     $(".pause-menu").hide();
     $(".countdown-area").hide();
 
+    $(".s-0-box").hide();
     $(".s-1-box").hide();
     $(".s-2-box").hide();
     $(".s-3-box").hide();
@@ -280,6 +289,10 @@
         let inGame = false;
         let isPaused = false;
         let hazeEffect = false; // since pause fades opacity, we need to check if the haze effect is active when resuming or else the effect is lost
+        let randomQuote = "";
+
+        let clickSound = new Audio('/audio/click-buttons-ui-menu-sounds-effects-button-7-203601.mp3'); 
+
 
         
         // slide in animation for the menu when the document is ready
@@ -329,6 +342,14 @@
             startCountDown();
         });
 
+
+        // $("button").on("click", function() {
+        //     clickSound.pause(); // Pause the audio if it's already playing
+        //     clickSound.currentTime = 0; // Reset audio to the start
+        //     clickSound.play(); // Play the sound
+        // });
+
+
         $('.end-game').on("click", function(){
             clearInterval(timerElapsed);
             clearInterval(timer);
@@ -342,6 +363,7 @@
             $(".g-acc").html("Accuracy: <span style='color:#66f224'>" + accuracy + "%</span>");
             $(".raw-acc").html("Raw Score: <span style='color:#3845d6'>" + score + "</span>");
             $(".p-ups-obtained").html("Powerups Obtained: <span style='color:#eee'>" + totalPowerupsCollected + "</span>");
+            $(".end-quote").html('<em>"' + randomQuote + '"</em>');
             $(".time-elapsed").html('Time Elapsed: <span style="color:#eee">' + hours + ':' + minutes + ':' + seconds + '.' + miliseconds + '</span>');
         });
         // Pause when the 
@@ -476,7 +498,22 @@
                     minutes = 0;
                     hours += 1;
                 }
-                if(totalSeconds == 15){ // 45 seconds in the game 45s Stage 1
+                if(totalSeconds == 0){
+                    $(".s-0-box").show().css({
+                        opacity: 0,
+                        top: '1%'
+                    }).animate({
+                        opacity: 1,
+                        top: '2%'
+                    }, 1000).delay(5500).fadeOut(1000); // 5 seconds of stage 0
+                    if(difficulty == "expert"){
+                        randomQuote = "It's best to turn back while you can. Only those with great valor shall succeed.";
+                    }
+                    else{
+                        randomQuote = "Didn't even make it off the ground. Pro Tip: Try Left Clicking?";
+                    }
+                }
+                if(totalSeconds == 30){ // 45 seconds in the game 45s Stage 1
                     $("body").css({
                         backgroundColor: "#4488c8"
                     });
@@ -486,9 +523,15 @@
                     }).animate({
                         opacity: 1,
                         top: '2%'
-                    }, 1000).delay(5000).fadeOut(1000);
+                    }, 1000).delay(5500).fadeOut(1000);
+                    if(difficulty == "expert"){
+                        randomQuote = "It's best to turn back while you can. Only those with great valor shall succeed.";
+                    }
+                    else{
+                        randomQuote = "Lift off! Oh wait, you fell. Maybe next time";
+                    }
                 }
-                if(totalSeconds == 30){ // 1 minute and 30 seconds into the game 90s Stage 2
+                if(totalSeconds == 60){ // 1 minute and 30 seconds into the game 90s Stage 2
                     $("body").css({
                         backgroundColor: "#0b238b"
                     });
@@ -506,10 +549,16 @@
                     }).animate({
                         opacity: 1,
                         top: '2%'
-                    }, 1000).delay(4000).fadeOut(1000);
+                    }, 1000).delay(5500).fadeOut(1000);
                     generateClouds();
+                    if(difficulty == "expert"){
+                        randomQuote = "You've have committed to pursuing the unknown. No more warnings, No more excuses now.";
+                    }
+                    else{
+                        randomQuote = "Pretty high you got there. One day, you'll soar above the clouds. But not today.";
+                    }
                 }
-                if(totalSeconds == 45){ // 2 minutes and 45 seconds into the game 165s Stage 3
+                if(totalSeconds == 90){ // 2 minutes and 45 seconds into the game 165s Stage 3
                     $("body").css({
                         backgroundColor: "#051e47"
                     });
@@ -520,6 +569,12 @@
                     } else {
                         health += 1.5; // +15 HP over a second
                     }
+                    totalCount += 3;
+                    accuracy = ((totalCount - misses) / totalCount) * 100; // calculate the accuracy
+                    if(accuracy > 100){
+                        accuracy = 100;
+                    }
+                    $(".acc").html('<h4>Accuracy: <span style = "color:#429820">' + accuracy.toFixed(2) + '%</span></h4>');
                     $(".hp").html('<h4>Health: <span style="color:#ec4048"> ' + health.toFixed(1) + ' HP</span></h4>');
                     $(".s-3-box").show().css({
                         opacity: 0,
@@ -527,14 +582,21 @@
                     }).animate({
                         opacity: 1,
                         top: '2%'
-                    }, 1000).delay(4000).fadeOut(1000);
+                    }, 1000).delay(5500).fadeOut(1000);
                     fadeClouds();
+                    if(difficulty == "expert"){
+                        randomQuote = "You are REALLY devoted in exerting your limits. Quite Impressive... not.";
+                    }
+                    else{
+                        randomQuote = "Almost there... Only truly when you reach the stars, maybe you'll understand your journey.";
+                    }
                 }
-                if(totalSeconds == 60){ // 3 minutes and 30 seconds into the game 210s Stage 4
+                if(totalSeconds == 120){ // 3 minutes and 30 seconds into the game 210s Stage 4
                     $("body").css({
                         backgroundColor: "#121212"
                     });
                     score += 8; // +80 score over a second
+                    totalCount += 2;
                     $(".score").html('<h4>Score: <span style = "color:#2eb8b5"> ' + score + '</span></h4>');
                     $(".s-4-box").show().css({
                         opacity: 0,
@@ -542,14 +604,22 @@
                     }).animate({
                         opacity: 1,
                         top: '2%'
-                    }, 1000).delay(4000).fadeOut(1000);
+                    }, 1000).delay(5500).fadeOut(1000);
                     generateStars();
+                    if(difficulty == "expert"){
+                        randomQuote =  "You've reached the zenith of your exploration and what do you find? Selcusion. Misery. Turmoil.";
+                    }
+                    else{
+                        randomQuote = "You've ascended to the stars above. But at what cost? Strength begins to erode and soon become worthless.";
+                    }
+
                 }
 
-                if(totalSeconds == 75){ // 4 minutes and 30 seconds into the game 270s Fatigue 1
+                if(totalSeconds == 150){ // 4 minutes and 30 seconds into the game 270s Fatigue 1
                     $(".fatigue-1").show();
                     accuracyPenaltyMultiplier = 2;
                     health -= 0.5; // -5 HP over a second
+                    cycleButtonAmount += 0.2; // add 2 extra buttons per cycle over 1 second
                     $(".hp").html('<h4>Health: <span style="color:#ec4048"> ' + health.toFixed(1) + ' HP</span></h4>');
                     if(health <= 0){
                         gameOver();
@@ -560,9 +630,15 @@
                     }).animate({
                         opacity: 1,
                         top: '2%'
-                    }, 1000).delay(4000).fadeOut(1000);
+                    }, 1000).delay(5500).fadeOut(1000);
+                    if(difficulty == "expert"){
+                        randomQuote = 'The concept of "strength" completely void. Nothing can save you now. Look forward and accept your fate.';
+                    }
+                    else{
+                        randomQuote = "You've done well. Now rest peacefully up here.";
+                    }
                 }
-                if(totalSeconds == 90) // 5 minutes and 30 seconds into the game 330s Fatigue 2
+                if(totalSeconds == 180) // 5 minutes and 30 seconds into the game 330s Fatigue 2
                 {
                     $(".fatigue-2").show();
                     health -= 1; // -10HP over a second
@@ -577,9 +653,15 @@
                     }).animate({
                         opacity: 1,
                         top: '2%'
-                    }, 1000).delay(4000).fadeOut(1000);
+                    }, 1000).delay(5500).fadeOut(1000);
+                    if(difficulty == "expert"){
+                        randomQuote = "In the midst of chaos and dejection, a speckle of light trickles in your sight. Your sanity has clouded however and now you are confined here, relapsing until the end of time.";
+                    }
+                    else{
+                        randomQuote = "Your strength is diminishing and yet you still carried on. For what do you seek for?";
+                    }
                 }
-                if(totalSeconds == 105){ // 6 minutes and 15 seconds into the game 375s Fatigue 3
+                if(totalSeconds == 210){ // 6 minutes and 15 seconds into the game 375s Fatigue 3
                     $(".fatigue-3").show();
                     hpReductionMultiplier = 2;
                     cycleButtonAmount += 0.5; // add 5 extra buttons per cycle over 1 second
@@ -589,7 +671,7 @@
                     }).animate({
                         opacity: 1,
                         top: '2%'
-                    }, 1000).delay(4000).fadeOut(1000);
+                    }, 1000).delay(5500).fadeOut(1000);
                     hpDecay = setInterval(function(){
                         health -= 0.1 // decay health by 1 over 1 second (0.1 decrement every 100ms)
                         $(".hp").html('<h4>Health: <span style="color:#ec4048"> ' + health.toFixed(1)+ ' HP</span></h4>');
@@ -597,7 +679,13 @@
                             clearInterval(hpDecay);
                             gameOver();
                         }
-                    }, 4000);
+                    }, 3000);
+                    if(difficulty == "expert"){
+                        randomQuote =  'In retrospect, the "memories" of your journey was just a figment of your imagination. Your journey never truly existed to begin with.';
+                    }
+                    else{
+                        randomQuote = "Resistance is futile here. What's the meaning of your journey? To reach the stars? Or unravel truth of your existence?"
+                    }
                 }
 
                 // Fatigue Events
@@ -617,6 +705,7 @@
             $(".g-acc").html("Accuracy: <span style='color:#66f224'>" + accuracy + "%</span>");
             $(".raw-acc").html("Raw Score: <span style='color:#3845d6'>" + score + "</span>");
             $(".p-ups-obtained").html("Powerups Obtained: <span style='color:#eee'>" + totalPowerupsCollected + "</span>");
+            $(".end-quote").html('<em>"' + randomQuote + '"</em>');
             $(".time-elapsed").html('Time Elapsed: <span style="color:#eee">' + hours + ':' + minutes + ':' + seconds + '.' + miliseconds + '</span>');
         }
         function generateStars(){
@@ -656,6 +745,7 @@
             });
         }
 
+        
         // The main game starting function
         // all square button declaration here, will be changed depending on the difficulty.\
         let randomEffects = [
@@ -663,7 +753,9 @@
             "regeneration",
             "haze",
             "glassCannon",
-            "shrink"
+            "shrink",
+            "increasePoints",
+            "shield"
         ];
         // checking how many times an effect has triggered
         let speedUpCount = 0;
@@ -671,12 +763,16 @@
         let hazeCount = 0;
         let glassCannonCount = 0;
         let shrinkCount = 0;
+        let increasePointsCount = 0;
+        let shieldCount = 0;
 
         let speedUpTime;
         let regenTime;
         let hazeTime;
         let glassCannonTime;
         let shrinkTime;
+        let increasePointsTime;
+        let shieldTime;
 
         let buttonEffects = [
             "good1",
@@ -698,6 +794,10 @@
         let baseSpeed;
         let effTimer;
         let startGameTimes = 0; // for resuming button, prevent the difficuly statments being executed again and restoring HP and stuff.
+        let expertPenaltyHP = 0; // for expert. 0 will be normal, 5 is expert
+        let expertPenaltyPoints = 0; // for expert. 0 will be normal, 5 is expert
+        let pointBonus = 0; // increase point effect
+        let shieldProtection = 1; // used for the shield effect 1 by default and changed to 0 for no health loss.
         function startGame(difficulty){
             startTimer();
             inGame = true;
@@ -714,6 +814,8 @@
                 
             } 
             if(difficulty == "expert" && startGameTimes == 0){
+                expertPenaltyHP = 5;
+                expertPenaltyPoints = 5;
                 health = 50;
                 maxHealth = 50;
                 $(".hp").html('<h4>Health: <span style="color:#ec4048"> ' + health.toFixed(1) + ' HP</span></h4>');
@@ -742,7 +844,7 @@
              // Roll a random chance for an effect to appear in this specific cycle.
              // If the chance is hit, it will reduce the cycleButtonAmount by 1 and instead replace it with the effect button
              // 10% chance per cycle for an effect to appear
-            let chance = Math.floor(Math.random() * 9) + 1;
+            let chance = Math.floor(Math.random() * 7) + 1;
             if(true){
                 hasEffect = true;
                 selectEffect = randomEffects[Math.floor(Math.random() * randomEffects.length)];
@@ -776,6 +878,9 @@
                 }
                 // when a button is clicked
                 button.on("click", function(){
+                    // clickSound.pause(); // Pause the audio if it's already playing
+                    // clickSound.currentTime = 0; // Reset audio to the start
+                    // clickSound.play(); // Play the sound
                     if (button.attr('id') == 'effect') {
                         totalPowerupsCollected++;
                         for (let i = 0; i < randomEffects.length; i++) {
@@ -903,7 +1008,53 @@
                                             }
                                             $(".shrink").html("Shrink: " + shrinkSeconds + "s");
                                         }, 1000);
-                                        break;  
+                                        break;
+                                    case "increasePoints":
+                                        if(increasePointsCount){
+                                            clearInterval(increasePointsTime);
+                                            $(".effects-container").find(".increasePoints").remove();
+                                            pointBonus = 0;
+                                        }
+                                        increasePointsCount = true;
+                                        pointBonus = 3;
+                                        $(".effects-container").append('<h4 class="increasePoints">Increase Points: 15s</h4>');
+                                        let increasePointsSeconds = 15;
+                                        increasePointsTime = setInterval(function() {
+                                            if(!isPaused){
+                                                increasePointsSeconds--;
+                                            }
+                                            if (increasePointsSeconds <= 0) {
+                                                clearInterval(increasePointsTime);
+                                                $(".effects-container").find(".increasePoints").remove();
+                                                increasePointsCount = false;
+                                                pointBonus = 0;
+                                            }
+                                            $(".increasePoints").html("Increase Points: " + increasePointsSeconds + "s");
+                                        }, 1000);
+                                        break;
+                                    case "shield":
+                                        if(shieldCount){
+                                            clearInterval(shieldTime);
+                                            $(".effects-container").find(".shield").remove();
+                                            shieldProtection = 1;
+                                        }
+                                        shieldCount = true;
+                                        shieldProtection = 0; // no health loss
+                                        $(".effects-container").append('<h4 class="shield">Shield: 15s</h4>');
+                                        let shieldSeconds = 15;
+                                        shieldTime = setInterval(function() {
+                                            if(!isPaused){
+                                                shieldSeconds--;
+                                            }
+                                            if (shieldSeconds <= 0) {
+                                                clearInterval(shieldTime);
+                                                $(".effects-container").find(".shield").remove();
+                                                shieldProtection = 1;
+                                                shieldCount = false;
+                                            }
+                                            $(".shield").html("Shield: " + shieldSeconds + "s");
+                                        }, 1000);
+                                        break;
                                 }
                             }
                         }
@@ -914,16 +1065,19 @@
                     // checks which square was clicked gives the appropriate score and health.
                     switch(randomSquare) {
                         case "good1":
-                            score += (1 - pointReduction) * glassCannonMultiplier;
+                            score += (1 + pointBonus) * glassCannonMultiplier; // no point reduction here because it would be zero.
                             if(health < maxHealth && (health + 0.5) < maxHealth){
                                 health += 0.5;
                             }
                             else{
                                 health += (maxHealth - health);
                             }
+                            clickSound.pause();
+                            clickSound.currentTime = 0;
+                            clickSound.play();
                             break;
                         case "good2":
-                            score += (2 - pointReduction) * glassCannonMultiplier;
+                            score += (2 - pointReduction + pointBonus) * glassCannonMultiplier;
                             if(health < maxHealth && (health + 0.5) < maxHealth){
                                 health += 0.5;
                             }
@@ -932,7 +1086,7 @@
                             }                            
                             break;
                         case "good3":
-                            score += (5 - pointReduction) * glassCannonMultiplier;
+                            score += (5 - pointReduction + pointBonus) * glassCannonMultiplier;
                             if(health < maxHealth && (health + 0.5) < maxHealth){
                                 health += 0.5;
                             }
@@ -941,7 +1095,7 @@
                             }
                             break;  
                         case "good4":
-                            score += (8 - pointReduction) * glassCannonMultiplier;
+                            score += (8 - pointReduction + pointBonus) * glassCannonMultiplier;
                             if(health < maxHealth && (health + 1) < maxHealth){
                                 health += 1;
                             }
@@ -950,25 +1104,25 @@
                             }
                             break;
                         case "bad1":
-                            score -= 3 * glassCannonMultiplier;
+                            score -= (3 + expertPenaltyPoints) * glassCannonMultiplier;
                             misses += (1 * accuracyPenaltyMultiplier);
-                            health -= 5 * glassCannonMultiplier * hpReductionMultiplier;
+                            health -= (5 + expertPenaltyHP) * glassCannonMultiplier * hpReductionMultiplier * shieldProtection;
                             break;
                         case "bad2":
-                            score -= 5 * glassCannonMultiplier;
+                            score -= (5 + expertPenaltyPoints) * glassCannonMultiplier;
                             misses += (1 * accuracyPenaltyMultiplier);
-                            health -= 7 * glassCannonMultiplier * hpReductionMultiplier;
+                            health -= (7 + expertPenaltyHP) * glassCannonMultiplier * hpReductionMultiplier * shieldProtection;
                             break;
                         case "bad3":
-                            score -= 10 * glassCannonMultiplier;
+                            score -= (10 + expertPenaltyPoints) * glassCannonMultiplier;
                             misses += (1 * accuracyPenaltyMultiplier);
-                            health -= 10 * glassCannonMultiplier * hpReductionMultiplier;
+                            health -= (10 + expertPenaltyHP) * glassCannonMultiplier * hpReductionMultiplier * shieldProtection;
                             break;
                         case "mystery":
                             let randomScore = Math.floor(Math.random() * 31) - 15; // random number between -15 and 15
                             let randomHealth = Math.floor(Math.random() * 8) - 5; // random number between -5 and 2
-                            score += randomScore;
-                            health += randomHealth;
+                            score += randomScore + pointBonus;
+                            health += randomHealth * shieldProtection;
                             if(health < maxHealth && (health + randomHealth) < maxHealth){
                                 health += randomHealth;
                             }
@@ -994,7 +1148,7 @@
                 delay = setTimeout(function(){
                     // If a good button was not clicked before this timeout function occurs, health will be reduced and so as accuracy.
                     if (button.attr('id') && button.attr('id').includes('good') && !isPaused) {
-                        health -= 3 * hpReductionMultiplier;
+                        health -= 3 * hpReductionMultiplier * shieldProtection;
                         totalCount++;
                         misses += 1
                         accuracy = ((totalCount - misses) / totalCount * 100).toFixed(2);

@@ -2,7 +2,8 @@
     margin: 0;
     padding: 0;
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-}
+    user-select: none; /*makes it so users can't select things that could effect their gameplay.*/
+}   
 /* The background will be depicted as the sky, as time progresses, the sky will begin to darken further and further.
 as the user approaches bounds outside of this world. */
 body{
@@ -15,7 +16,7 @@ body{
     width: 10px;
     height: 10px;
     border-radius: 100%;
-    box-shadow: 2px 2px 2px gold;
+    box-shadow: 0.5px 0.5px 0.5px gold;
     z-index: -2;
     opacity: 0.5;
 }
@@ -28,6 +29,25 @@ body{
     box-shadow: 2px 2px 2px #ccc;
     z-index: -2;
     
+}
+.s-0-box{
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 400px;
+    height: 120px;
+    /* Simple nature background image */
+    background-image: url("https://www.shutterstock.com/image-vector/gaming-vector-background-landscape-video-600nw-2308922901.jpg");
+    background-blend-mode: overlay;
+    background-color: rgba(255, 255,255, 0.5);
+    border-radius: 10px;
+    border: 2px solid rgb(82, 109, 168);
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: rgb(0, 0, 0);
 }
 .s-1-box{
     position: absolute;
@@ -306,7 +326,7 @@ button:hover{
    left:50%;
    transform: translate(-50%,-50%);
    width: 600px;
-   height:350px;
+   height:375px;
    background-color: rgb(209, 123, 123);
    border-radius:10px;
    box-shadow: 2px 2px 2px #777;
@@ -424,7 +444,7 @@ button:hover{
 
 
 
-@media (max-width: 1600px){
+@media (max-width: 2000px){
     .main-grid-container-normal button{
         height: 6.5rem;
         width: 6.5rem;
