@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>jquery game</title>
+    <title>Blitz Clicker</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -72,7 +72,7 @@
         <div class="fatigue-3-banner">
             <h2>Exhaustion.</h2>
             <h4>This is the end. It's over</h4>
-            <h4>Your health decays (-1 HP/2 Seconds)</h4>
+            <h4>Your health decays (-1 HP/4 Seconds)</h4>
             <h4>Health Reduction Penalty Doubled.</h4>
             <h4> +5 Tile Density</h4>
         </div>
@@ -278,6 +278,9 @@
         let temp;
         let totalPowerupsCollected = 0;
         let inGame = false;
+        let isPaused = false;
+        let hazeEffect = false; // since pause fades opacity, we need to check if the haze effect is active when resuming or else the effect is lost
+
         
         // slide in animation for the menu when the document is ready
         $(".intro-menu").css({
@@ -330,6 +333,7 @@
             clearInterval(timerElapsed);
             clearInterval(timer);
             inGame = false; // prevent pause from being clicked again
+            isPaused = false;
             $(".container").fadeOut(500);
             $(".pause-menu").fadeOut(500);  
             $(".over-title").html("Game Ended Early");
@@ -344,9 +348,12 @@
         $(document).on("keydown", function(e) {
             if (e.key.toLowerCase() === "p" && inGame) {
                 {
-                    temp = health; // store the current health so we can restore it when resuming the game
-                    health = 100; // prevent death from the last set of fading blocks that may reduce health
-                    $(".hp").html('<h4>Health: <span style="color:#ec4048"> 100 HP</span></h4>'); // update the health to 1000 so it doesn't show 0 when paused
+                    isPaused = true;
+                    // temp = health; // store the current health so we can restore it when resuming the game
+                    // console.log(temp);
+                    // health = 100; // prevent death from the last set of fading blocks that may reduce health
+
+                    // $(".hp").html('<h4>Health: <span style="color:#ec4048"> 100 HP</span></h4>'); // update the health to 1000 so it doesn't show 0 when paused
                     clearInterval(timerElapsed);
                     clearInterval(timer);
                     $(".container").animate({
@@ -361,9 +368,11 @@
             }
         });
         $(".pause").on("click", function(){
-            temp = health; // store the current health so we can restore it when resuming the game
-            health = 100; // prevent death from the last set of fading blocks that may reduce health
-            $(".hp").html('<h4>Health: <span style="color:#ec4048"> 100 HP</span></h4>'); // update the health to 1000 so it doesn't show 0 when paused
+            isPaused = true;
+            // temp = health; // store the current health so we can restore it when resuming the game
+            // console.log(temp);
+            // health = 100; // prevent death from the last set of fading blocks that may reduce health
+            // $(".hp").html('<h4>Health: <span style="color:#ec4048"> 100 HP</span></h4>'); // update the health to 1000 so it doesn't show 0 when paused
             clearInterval(timerElapsed);
             clearInterval(timer);
             $(".container").animate({
@@ -382,18 +391,24 @@
             }
         });
         $(".resume").on("click", function(){
-            health = temp;
-            $(".hp").html('<h4>Health: <span style="color:#ec4048"> ' + health + ' HP</span></h4>'); 
+            isPaused = false;
+            // // health = temp;
+            // $(".hp").html('<h4>Health: <span style="color:#ec4048"> ' + health + ' HP</span></h4>'); 
             clearInterval(timerElapsed);
             clearInterval(timer);
             setTimeout(function(){
                 startGame(difficulty);
             },200);
-
+            
             $(".container").css("pointer-events", "auto"); // make the game board clickable again
-            $(".container").animate({
-                opacity: 1
-            });
+            if(hazeEffect == true){
+                $(".container").css("opacity", 0.45);
+            }
+            else{
+                $(".container").animate({
+                    opacity: 1
+                });
+            }
             $(".pause-menu").fadeOut(300);
             $(".pause-menu").css({
                 zIndex: -1
@@ -461,7 +476,7 @@
                     minutes = 0;
                     hours += 1;
                 }
-                if(totalSeconds == 5){ // 1 minute in the game 60s Stage 1
+                if(totalSeconds == 15){ // 45 seconds in the game 45s Stage 1
                     $("body").css({
                         backgroundColor: "#4488c8"
                     });
@@ -471,23 +486,20 @@
                     }).animate({
                         opacity: 1,
                         top: '2%'
-                    }, 1000).delay(4000).fadeOut(1000);
+                    }, 1000).delay(5000).fadeOut(1000);
                 }
-                if(totalSeconds == 10){ // 1 minute and 45 seconds into the game 105s Stage 2
+                if(totalSeconds == 30){ // 1 minute and 30 seconds into the game 90s Stage 2
                     $("body").css({
                         backgroundColor: "#0b238b"
                     });
-
-                    score += 3;
-                    $(".score").html('<h3>Score: <span style = "color:#2eb8b5"> ' + score + '</span></h3>');
+                    score += 3; // +30 points over a second
+                    $(".score").html('<h4>Score: <span style = "color:#2eb8b5"> ' + score + '</span></h4>');
                     if((health + 10) > maxHealth){ // if the health is above the max, set it to the max
                         health = maxHealth;
                     } else {
-                        health += 1; // +10 HP
+                        health += 1; // +10 HP over a second
                     }
-                    $(".hp").html('<h4>Health: <span style="color:#ec4048"> ' + health + ' HP</span></h4>');
-
-
+                    $(".hp").html('<h4>Health: <span style="color:#ec4048"> ' + health.toFixed(1) + ' HP</span></h4>');
                     $(".s-2-box").show().css({
                         opacity: 0,
                         top: '0%'
@@ -497,17 +509,18 @@
                     }, 1000).delay(4000).fadeOut(1000);
                     generateClouds();
                 }
-                if(totalSeconds == 15){ // 2 minutes and 45 seconds into the game 165s Stage 3
+                if(totalSeconds == 45){ // 2 minutes and 45 seconds into the game 165s Stage 3
                     $("body").css({
                         backgroundColor: "#051e47"
                     });
-                    score += 5;
-                    $(".score").html('<h3>Score: <span style = "color:#2eb8b5"> ' + score + '</span></h3>');
+                    score += 5; // +50 score over a second
+                    $(".score").html('<h4>Score: <span style = "color:#2eb8b5"> ' + score + '</span></h4>');
                     if((health + 15) > maxHealth){ // if the health is above the max, set it to the max
                         health = maxHealth;
                     } else {
-                        health += 1; // +15 HP
+                        health += 1.5; // +15 HP over a second
                     }
+                    $(".hp").html('<h4>Health: <span style="color:#ec4048"> ' + health.toFixed(1) + ' HP</span></h4>');
                     $(".s-3-box").show().css({
                         opacity: 0,
                         top: '0%'
@@ -517,12 +530,12 @@
                     }, 1000).delay(4000).fadeOut(1000);
                     fadeClouds();
                 }
-                if(totalSeconds == 20){ // 3 minutes and 30 seconds into the game 210s Stage 4
+                if(totalSeconds == 60){ // 3 minutes and 30 seconds into the game 210s Stage 4
                     $("body").css({
                         backgroundColor: "#121212"
                     });
-                    score += 8;
-                    $(".score").html('<h3>Score: <span style = "color:#2eb8b5"> ' + score + '</span></h3>');
+                    score += 8; // +80 score over a second
+                    $(".score").html('<h4>Score: <span style = "color:#2eb8b5"> ' + score + '</span></h4>');
                     $(".s-4-box").show().css({
                         opacity: 0,
                         top: '0%'
@@ -533,11 +546,11 @@
                     generateStars();
                 }
 
-                if(totalSeconds == 25){ // 4 minutes and 30 seconds into the game 270s Fatigue 1
+                if(totalSeconds == 75){ // 4 minutes and 30 seconds into the game 270s Fatigue 1
                     $(".fatigue-1").show();
                     accuracyPenaltyMultiplier = 2;
-                    health -= 0.5; // -0.5 HP per 0.1s
-                    $(".hp").html('<h4>Health: <span style="color:#ec4048"> ' + health + ' HP</span></h4>');
+                    health -= 0.5; // -5 HP over a second
+                    $(".hp").html('<h4>Health: <span style="color:#ec4048"> ' + health.toFixed(1) + ' HP</span></h4>');
                     if(health <= 0){
                         gameOver();
                     }
@@ -549,11 +562,11 @@
                         top: '2%'
                     }, 1000).delay(4000).fadeOut(1000);
                 }
-                if(totalSeconds == 30) // 5 minutes and 30 seconds into the game 330s Fatigue 2
+                if(totalSeconds == 90) // 5 minutes and 30 seconds into the game 330s Fatigue 2
                 {
                     $(".fatigue-2").show();
-                    health -= 1; // -1 HP per 0.1s
-                    $(".hp").html('<h4>Health: <span style="color:#ec4048"> ' + health + ' HP</span></h4>');
+                    health -= 1; // -10HP over a second
+                    $(".hp").html('<h4>Health: <span style="color:#ec4048"> ' + health.toFixed(1) + ' HP</span></h4>');
                     pointReduction = 1;
                     if(health <= 0){
                         gameOver();
@@ -566,10 +579,10 @@
                         top: '2%'
                     }, 1000).delay(4000).fadeOut(1000);
                 }
-                if(totalSeconds == 35){ // 6 minutes and 30 seconds into the game 390s Fatigue 3
+                if(totalSeconds == 105){ // 6 minutes and 15 seconds into the game 375s Fatigue 3
                     $(".fatigue-3").show();
                     hpReductionMultiplier = 2;
-                    cycleButtonAmount += 5;
+                    cycleButtonAmount += 0.5; // add 5 extra buttons per cycle over 1 second
                     $(".fatigue-3").show().css({
                         opacity: 0,
                         top: '0%'
@@ -578,12 +591,13 @@
                         top: '2%'
                     }, 1000).delay(4000).fadeOut(1000);
                     hpDecay = setInterval(function(){
-                        health -= 1
+                        health -= 0.1 // decay health by 1 over 1 second (0.1 decrement every 100ms)
+                        $(".hp").html('<h4>Health: <span style="color:#ec4048"> ' + health.toFixed(1)+ ' HP</span></h4>');
                         if(health <= 0){
                             clearInterval(hpDecay);
                             gameOver();
                         }
-                    }, 2000);
+                    }, 4000);
                 }
 
                 // Fatigue Events
@@ -646,20 +660,20 @@
         // all square button declaration here, will be changed depending on the difficulty.\
         let randomEffects = [
             "speedUp",
-            "speedDown",
+            "regeneration",
             "haze",
             "glassCannon",
             "shrink"
         ];
         // checking how many times an effect has triggered
         let speedUpCount = 0;
-        let speedDownCount = 0;
+        let regenCount = 0;
         let hazeCount = 0;
         let glassCannonCount = 0;
         let shrinkCount = 0;
 
         let speedUpTime;
-        let speedDownTime;
+        let regenTime;
         let hazeTime;
         let glassCannonTime;
         let shrinkTime;
@@ -683,32 +697,34 @@
         let glassCannonMultiplier = 1; // used for the glass cannon effect
         let baseSpeed;
         let effTimer;
+        let startGameTimes = 0; // for resuming button, prevent the difficuly statments being executed again and restoring HP and stuff.
         function startGame(difficulty){
             startTimer();
             inGame = true;
-            if(difficulty == "normal"){
+            if(difficulty == "normal" && startGameTimes == 0){
                 health = 100;
                 maxHealth = 100;
-                $(".hp").html('<h4>Health: <span style="color:#ec4048"> ' + health + ' HP</span></h4>')
+                $(".hp").html('<h4>Health: <span style="color:#ec4048"> ' + health.toFixed(1) + ' HP</span></h4>')
                 totalButtons = 25;
                 cycleButtonAmount = 9;
                 cycleTime = 5000;
                 baseSpeed = cycleTime;
                 buttons = $(".main-grid-container-normal button"); // collect buttons
                 
-
+                
             } 
-            if(difficulty == "expert"){
+            if(difficulty == "expert" && startGameTimes == 0){
                 health = 50;
                 maxHealth = 50;
-                $(".hp").html('<h4>Health: <span style="color:#ec4048"> ' + health + ' HP</span></h4>');
+                $(".hp").html('<h4>Health: <span style="color:#ec4048"> ' + health.toFixed(1) + ' HP</span></h4>');
                 totalButtons = 36;
-                cycleButtonAmount = 20; // how many buttons can exists in a cycle. 
+                cycleButtonAmount = 18; // how many buttons can exists in a cycle. 
                 cycleTime = 4500;
                 baseSpeed = cycleTime;
                 
                 buttons = $(".main-grid-container-expert button"); // collect buttons
             }
+            startGameTimes += 1;
             // select a couple buttons instantly when the game starts.
             selectRandomButtons(buttons, cycleButtonAmount);
             timer = setInterval(function(){
@@ -727,7 +743,7 @@
              // If the chance is hit, it will reduce the cycleButtonAmount by 1 and instead replace it with the effect button
              // 10% chance per cycle for an effect to appear
             let chance = Math.floor(Math.random() * 9) + 1;
-            if(chance == 5){
+            if(true){
                 hasEffect = true;
                 selectEffect = randomEffects[Math.floor(Math.random() * randomEffects.length)];
             }
@@ -764,7 +780,6 @@
                         totalPowerupsCollected++;
                         for (let i = 0; i < randomEffects.length; i++) {
                             if (randomEffects[i] === selectEffect) {
-
                                 switch (selectEffect) {
                                     case "speedUp":
                                         if(speedUpCount){
@@ -777,7 +792,9 @@
                                         $(".effects-container").append('<h4 class="speedUp">Speed Up: 20s</h4>');
                                         let speedUpSeconds = 20;
                                         speedUpTime = setInterval(function() {
-                                            speedUpSeconds--;
+                                            if(!isPaused){
+                                                speedUpSeconds--;
+                                            }
                                             if (speedUpSeconds <= 0) {
                                                 clearInterval(speedUpTime);
                                                 cycleTime = baseSpeed; // return to normal speed after 20 seconds
@@ -788,29 +805,36 @@
 
                                         }, 1000);
                                         break;
-                                    case "speedDown":
-                                        if(speedDownCount){
-                                            clearInterval(speedDownTime);
-                                            $(".effects-container").find(".speedDown").remove();
-                                            cycleTime = baseSpeed;
+                                    case "regeneration":
+                                        if(regenCount){
+                                            clearInterval(regenTime);
+                                            $(".effects-container").find(".regeneration").remove();
                                         }
-                                        speedDownCount= true;
-                                        cycleTime = cycleTime + 1500 // 1.5 seconds slower
-                                        $(".effects-container").append('<h4 class="speedDown">Speed Down: 20s</h4>');
-                                        let speedDownSeconds = 20;
-                                        speedDownTime = setInterval(function() {
-                                            speedDownSeconds--;
-                                            if (speedDownSeconds <= 0) {
-                                                clearInterval(speedDownTime);
-                                                cycleTime = baseSpeed; // reset to normal speed after 20 seconds
-                                                $(".effects-container").find(".speedDown").remove();
-                                                speedDownCount = false;
+                                        regenCount= true;
+                                        $(".effects-container").append('<h4 class="regeneration">Regeneration: 15s</h4>');
+                                        let regenSeconds = 15;
+                                        regenTime = setInterval(function() {
+                                            if(!isPaused){
+                                                regenSeconds--;
                                             }
-                                            $(".speedDown").html("Speed Down: " + speedDownSeconds + "s");
+                                            $(".hp").html('<h4>Health: <span style="color:#ec4048"> ' + health.toFixed(1) + ' HP</span></h4>');
+                                            if((health + 1) < maxHealth){
+                                                health += 1;
+                                            }
+                                            else{
+                                                health = 100;
+                                            }
+                                            if (regenSeconds <= 0) {
+                                                clearInterval(regenTime);
+                                                $(".effects-container").find(".regeneration").remove();
+                                                regenCount = false;
+                                            }
+                                            $(".regeneration").html("Regeneration: " + regenSeconds + "s");
                                         }, 1000);
                                         break;
 
                                     case "haze":
+                                        hazeEffect = true;
                                         if(hazeCount){
                                             clearInterval(hazeTime);
                                             $(".effects-container").find(".haze").remove();
@@ -821,12 +845,15 @@
                                         $(".effects-container").append('<h4 class="haze">Haze: 15s</h4>');
                                         let hazeSeconds = 15;
                                         hazeTime = setInterval(function() {
-                                            hazeSeconds--;
+                                            if(!isPaused){
+                                                hazeSeconds--;
+                                            }
                                             if (hazeSeconds <= 0) {
                                                 clearInterval(hazeTime);
                                                 $(".effects-container").find(".haze").remove();
                                                 $(".container").css("opacity", 1);
                                                 hazeCount = false;
+                                                hazeEffect = false;
                                             }
                                             $(".haze").html("Haze: " + hazeSeconds + "s");
                                         },1000)
@@ -842,7 +869,9 @@
                                         let glassSeconds = 15;
                                         $(".effects-container").append('<h4 class="glassCannon">Glass Cannon: 15s</h4>');
                                         glassCannonTime = setInterval(function() {
-                                            glassSeconds--;
+                                            if(!isPaused){
+                                                glassSeconds--;
+                                            }
                                             if (glassSeconds <= 0) {
                                                 clearInterval(glassCannonTime);
                                                 glassCannonMultiplier = 1;
@@ -863,7 +892,9 @@
                                         $(".effects-container").append('<h4 class="shrink">Shrink: 15s</h4>');
                                         let shrinkSeconds = 15;
                                         shrinkTime = setInterval(function() {
-                                            shrinkSeconds--;
+                                            if(!isPaused){
+                                                shrinkSeconds--;
+                                            }
                                             if (shrinkSeconds <= 0) {
                                                 clearInterval(shrinkTime);
                                                 $(".main-grid-container-normal button, .main-grid-container-expert button").css("scale", "1");
@@ -883,7 +914,7 @@
                     // checks which square was clicked gives the appropriate score and health.
                     switch(randomSquare) {
                         case "good1":
-                            score += 1 * glassCannonMultiplier;
+                            score += (1 - pointReduction) * glassCannonMultiplier;
                             if(health < maxHealth && (health + 0.5) < maxHealth){
                                 health += 0.5;
                             }
@@ -892,7 +923,7 @@
                             }
                             break;
                         case "good2":
-                            score += 2 * glassCannonMultiplier;
+                            score += (2 - pointReduction) * glassCannonMultiplier;
                             if(health < maxHealth && (health + 0.5) < maxHealth){
                                 health += 0.5;
                             }
@@ -901,7 +932,7 @@
                             }                            
                             break;
                         case "good3":
-                            score += 5 * glassCannonMultiplier;
+                            score += (5 - pointReduction) * glassCannonMultiplier;
                             if(health < maxHealth && (health + 0.5) < maxHealth){
                                 health += 0.5;
                             }
@@ -910,7 +941,7 @@
                             }
                             break;  
                         case "good4":
-                            score += 8 * glassCannonMultiplier;
+                            score += (8 - pointReduction) * glassCannonMultiplier;
                             if(health < maxHealth && (health + 1) < maxHealth){
                                 health += 1;
                             }
@@ -920,17 +951,17 @@
                             break;
                         case "bad1":
                             score -= 3 * glassCannonMultiplier;
-                            misses++;
+                            misses += (1 * accuracyPenaltyMultiplier);
                             health -= 5 * glassCannonMultiplier * hpReductionMultiplier;
                             break;
                         case "bad2":
                             score -= 5 * glassCannonMultiplier;
-                            misses++;
+                            misses += (1 * accuracyPenaltyMultiplier);
                             health -= 7 * glassCannonMultiplier * hpReductionMultiplier;
                             break;
                         case "bad3":
                             score -= 10 * glassCannonMultiplier;
-                            misses++;
+                            misses += (1 * accuracyPenaltyMultiplier);
                             health -= 10 * glassCannonMultiplier * hpReductionMultiplier;
                             break;
                         case "mystery":
@@ -948,9 +979,12 @@
                     }
                     totalCount++;
                     accuracy = ((totalCount - misses) / totalCount * 100).toFixed(2);
+                    if(accuracy < 0){
+                        accuracy = 0.01;
+                    }
                     $(".score").html('<h4>Score: <span style="color:#2eb8b5">' + score + '</span></h4>');
                     $(".acc").html('<h4>Accuracy: <span style="color:#429820">' + accuracy + '%</span></h4>');
-                    $(".hp").html('<h4>Health: <span style="color:#ec4048"> ' + health + ' HP</span></h4>');
+                    $(".hp").html('<h4>Health: <span style="color:#ec4048"> ' + health.toFixed(1) + ' HP</span></h4>');
                     if(health <= 0){
                        gameOver();
                     }
@@ -959,12 +993,15 @@
                 // Fade out the buttons after a certain set amount of time
                 delay = setTimeout(function(){
                     // If a good button was not clicked before this timeout function occurs, health will be reduced and so as accuracy.
-                    if (button.attr('id') && button.attr('id').includes('good')) {
+                    if (button.attr('id') && button.attr('id').includes('good') && !isPaused) {
                         health -= 3 * hpReductionMultiplier;
                         totalCount++;
-                        misses++;
+                        misses += 1
                         accuracy = ((totalCount - misses) / totalCount * 100).toFixed(2);
-                        $(".hp").html('<h4>Health: <span style="color:#ec4048"> ' + health + ' HP</span></h4>');
+                        if(accuracy < 0){
+                            accuracy = 0.01;
+                        }
+                        $(".hp").html('<h4>Health: <span style="color:#ec4048"> ' + health.toFixed(1) + ' HP</span></h4>');
                         $(".acc").html('<h4>Accuracy: <span style="color:#429820">' + accuracy + '%</span></h4>');
                         if (health <= 0) {
                            gameOver();

@@ -17,13 +17,6 @@ The end goal is the acquire as much points as possible before the timer ends. Fi
 
 
 ## Square Information
-- Blue Square = 1 point
-- Purple/Indigo Square = 3 points
-- Golden Square = 5 points
-- Gray Square = Mystery Square (ranging from -30 to +10 points)
-- Light Red Square = -3 points
-- Dark Red Square = -6 points  
-- Blank Square = -1 point & - double the accuracy.
-- '<<' Square = Fading speed halves for 10s (positive)
-- '>>' Square = Fading speed doubles for 15s (negative) and accuracy reduction
-For Expert Mode, All positive squares will give half the points, accuracy penalty is doubled, mystery squares range from (-40 to +15 points), negative tiles will give double the negative points, and speed is increased by 20%.
+- Light Blue Square = 1 Point, + 0.5 HP.
+- Light Green Sqaure = 2 Points, + 0.5 HP.
+- Dark Green Square = 5 Points, + 0.5 HP.
