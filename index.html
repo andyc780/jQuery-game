@@ -12,6 +12,7 @@
         <div class="intro-items">
             <h1>Blitz Clicker</h1>
             <h2>Choose Difficulty</h2>
+            <button class="how-to-play">How To Play</button>
             <div class="difficulty">
                 <button class="normal-button">Normal</button>
                 <button class="expert-button">Expert</button>
@@ -20,6 +21,42 @@
             <br>
             <button class="submit">Start Game</button>
         </div>
+    </div>
+    <div class="tutorial-menu">
+        <div class="tutorial-items">
+            <h2><span style="color:#e4982d;"> Welcome to Blitz Clicker! </span></h2>
+            <p>This is a game all about reaction and clicking the correct squares quickly and accurately!</p>
+            <p>Note: Positive squares that fade out before being clicked counts as a miss and -3 HP and reduced accuracy.</p>
+            <br>
+            <h3>Basic Tile Information</h3>
+            <div class="tile-info" style ="margin-left:20px;">
+                <ul>
+                    <li><span style ="background-color:#77b4ed; border-radius:5px; margin:1px;">Light Blue</span> - +1 Point, +0.5 HP</li>
+                    <li><span style ="background-color:rgb(151, 234, 151); border-radius:5px; margin:1px;">Light Green </span> - +2 Points, +0.5 HP</li>
+                    <li><span style ="background-color:rgb(9, 165, 9); border-radius:5px; margin:1px;">Dark Green</span> - +5 Points, + 0.5 HP</li>
+                    <li><span style ="background-color:rgb(243, 213, 42); border-radius:5px; margin:1px;">Gold </span> - +8 Points, +1 HP</li>
+                    <li><span style ="background-color:rgb(233, 99, 99); border-radius:5px; margin:1px;">Light Red</span> - -3 Points, -5 HP</li>
+                    <li><span style ="background-color:rgb(204, 33, 33); border-radius:5px; margin:1px;">Dark Red</span> - -5 Points, -7 HP</li>
+                    <li><span style ="background-color:rgb(141, 30, 141); border-radius:5px; margin:1px;">Purple</span> - -10 Points, -10 HP</li>
+                    <li><span style ="background-color:rgb(141, 137, 137); border-radius:5px; margin:1px;"> Random </span> (-15 to +15 Points), (-5 to +2) HP</li>
+                    <li><span style ="background-color:#ff8903; border-radius:5px; margin:1px;">Orange</span> - Random Effect</li>
+                </ul>
+                <br>
+            </div>
+            <div class="effect-info" style ="margin-left: 20px;">
+                <h3>Effect Information</h3>
+                <ul>
+                    <li>Speed Up: Increases game speed by 1s</li>
+                    <li>Regeneration: +1 HP/Second</li>
+                    <li>Glass Cannon: x2 Points, x-2 Health</li>
+                    <li>Shrink: Reduced Board Size</li>
+                    <li>Increase Points: +3 Points per positive box</li>
+                    <li>Haze: Reduced Board Opacity</li>
+                    <li>Shield: You cannot lose HP</li>
+                </ul>
+            </div>
+        </div>
+        <button class="return-back-tutorial">Return Home</button>
     </div>
 <div class="banners">
     <div class="s-0-box">
@@ -250,7 +287,7 @@
 <script>
     // welcome to all of my pain and suffering inside of this file, good luck going through it.
 
-
+    $(".tutorial-menu").hide();
     $(".game-over-menu").hide();
     $(".statistics-container").hide();
     $(".main-grid-container-normal").hide();
@@ -304,7 +341,14 @@
             opacity: 1
         },1000);
 
-
+        $(".how-to-play").on("click", function(){
+            $(".intro-menu").fadeOut(500);
+            $(".tutorial-menu").fadeIn(1000);
+        });
+        $(".return-back-tutorial").on("click", function(){
+            $(".tutorial-menu").fadeOut(500);
+            $(".intro-menu").fadeIn(1000);
+        });
         $(".normal-button").on("click", function(){
             difficulty = "normal";
             $('.intro-menu').css({
@@ -845,7 +889,7 @@
              // If the chance is hit, it will reduce the cycleButtonAmount by 1 and instead replace it with the effect button
              // 10% chance per cycle for an effect to appear
             let chance = Math.floor(Math.random() * 7) + 1;
-            if(true){
+            if(chance == 5){
                 hasEffect = true;
                 selectEffect = randomEffects[Math.floor(Math.random() * randomEffects.length)];
             }
