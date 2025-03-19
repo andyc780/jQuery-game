@@ -30,7 +30,9 @@
      let timerElapsed;
      let timer;
      let score = 0;
-     let highScore = localStorage.getItem("highScore") || 0; // get the high score from local storage, if it doesn't exist, set it to 0
+     // me smashing my head on the table figuring out why the highscore stuff was not working..
+     // find out that local storage is stored in string format and im trying to compare a string with an integer, this is bs.
+     let highScore = parseFloat(localStorage.getItem("highScore")) || 0; // get the high score from local storage, if it doesn't exist, set it to 0
      let accuracyBuffer = 10; // adds some leniency to the accuracy calculation 
      let totalCount = 0 + accuracyBuffer;
      let misses = 0;
@@ -148,17 +150,16 @@
          gameMusic.pause();
          chaosMusic.pause();
          setTimeout(function() {
-             gameOverSound.pause();
-             gameOverSound.currentTime = 0;
              gameOverSound.volume = 0.4; // set the volume to 40%
              gameOverSound.play();
          }, 1000); 
          clearInterval(timerElapsed);
          clearInterval(timer);
          let finalScore = (score * (accuracy / 100)).toFixed(1);
-          if (finalScore > highScore) {
-            highScore = finalScore;
-            localStorage.setItem("highScore", finalScore);
+         // parsing stuff in the if statement
+        if (finalScore > highScore) {
+            highScore = parseFloat(finalScore);
+            localStorage.setItem("highScore", highScore); // Then store it in localStorage
         }
          let finalAccuracy = accuracy;
          let finalRawScore = score;
@@ -563,10 +564,12 @@
          // final score declarations
          let finalScore = (score * (accuracy / 100)).toFixed(1);
          // If the final score is higher than the final score, than this will be the new high score.
-            if (finalScore > highScore) {
-                highScore = finalScore;
-                localStorage.setItem("highScore", highScore);
-            }
+        //  console.log("Final Score:" + finalScore);
+        //  console.log("Stored High Score:" + highScore);
+         if (finalScore > highScore) {
+            highScore = parseFloat(finalScore);
+            localStorage.setItem("highScore", highScore); // Then store it in localStorage
+        }
          let finalAccuracy = accuracy;
          let finalRawScore = score;
          inGame = false; // prevent pause from being clicked again
@@ -583,6 +586,8 @@
          $(".p-ups-obtained").html("Powerups Obtained: <span style='color:#eee'>" + totalPowerupsCollected + "</span>");
          $(".end-quote").html('<em>"' + randomQuote + '"</em>');
          $(".time-elapsed").html('Time Elapsed: <span style="color:#eee">' + hours + ':' + minutes + ':' + seconds + '.' + miliseconds + '</span>');
+         return;
+
 
      }
      // For the final stage, stars will be generated to make the background look nicer and imitate space kinda.
@@ -679,6 +684,10 @@
      let expertPenaltyPoints = 0; // for expert. 0 will be normal, 5 is expert
      let pointBonus = 0; // increase point effect
      let shieldProtection = 1; // used for the shield effect 1 by default and changed to 0 for no health loss.
+
+     let chaosHealthMultiplier = 1;  // for chaos mode when clicking on good buttons, will be changed to 0 as no health should be given for good buttons.
+     // i realized that the line above was removed after publishing the assingment soo yeahh rip
+
      function startGame(difficulty){
          startTimer();
          inGame = true;
@@ -1064,9 +1073,7 @@
                  // If user health drops to zero or below, end game
                  if(health <= 0){
                     gameOver();
-                    clearTimeout(delay);
                     return;
-                 
                  }
                  // Accuracy calculation here
                  accuracy = ((totalCount - misses) / totalCount * 100).toFixed(2);
@@ -1089,9 +1096,8 @@
                      misses += 1
                      if (health <= 0) {
                         gameOver();
-                        clearTimeout(delay);
                         return;
-                     }
+                    }
                      // Accuracy calculation here
                      accuracy = ((totalCount - misses) / totalCount * 100).toFixed(2);
                      // There will be no negative accuracy so it will be replaced by 0.01
